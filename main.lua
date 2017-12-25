@@ -28,13 +28,14 @@ require "state/register"
 
 sprites = {}
 
-SWIDTH = love.graphics.getWidth()
-SHEIGHT = love.graphics.getHeight()
-WHITE = {255,255,255}
-BLACK = {0,0,0}
-RED = {255,0,0}
-GREEN = {0,255,0}
-GREY = {177,177,177}
+SW = love.graphics.getWidth()
+SH = love.graphics.getHeight()
+CLR = {}
+CLR.WHITE = {255,255,255}
+CLR.BLACK = {0,0,0}
+CLR.RED = {255,0,0}
+CLR.GREEN = {0,255,0}
+CLR.GREY = {177,177,177}
 
 FONT_SIZE = 24
 
@@ -46,8 +47,6 @@ function love.load(arg)
   if debug then require("mobdebug").start() end
   Gamestate.registerEvents()
   love.keyboard.setKeyRepeat(true)
-  TILE_WIDTH = math.floor(SWIDTH/15)
-  PIECE_WIDTH = math.floor(TILE_WIDTH*10/12)
   love.graphics.setFont(love.graphics.newFont(math.floor(SHEIGHT/64)))
   love.graphics.setBackgroundColor(BLACK)
   cur_highlight = love.mouse.getSystemCursor("hand")
