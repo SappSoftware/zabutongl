@@ -14,12 +14,11 @@ Vector = require "hump.vector"
 
 require "Tserial"
 
-require "class/Board"
 require "class/ServerObject"
 require "class/ClientObject"
-require "class/Tile"
 require "class/Button"
 require "class/FillableField"
+require "class/Label"
 
 require "state/server_menu"
 require "state/client_menu"
@@ -30,12 +29,15 @@ sprites = {}
 
 SW = love.graphics.getWidth()
 SH = love.graphics.getHeight()
+
 CLR = {}
 CLR.WHITE = {255,255,255}
 CLR.BLACK = {0,0,0}
 CLR.RED = {255,0,0}
 CLR.GREEN = {0,255,0}
 CLR.GREY = {177,177,177}
+
+CUR = {}
 
 FONT_SIZE = 24
 
@@ -47,10 +49,10 @@ function love.load(arg)
   if debug then require("mobdebug").start() end
   Gamestate.registerEvents()
   love.keyboard.setKeyRepeat(true)
-  love.graphics.setFont(love.graphics.newFont(math.floor(SHEIGHT/64)))
-  love.graphics.setBackgroundColor(BLACK)
-  cur_highlight = love.mouse.getSystemCursor("hand")
-  cur_field = love.mouse.getSystemCursor("ibeam")
+  love.graphics.setFont(love.graphics.newFont(math.floor(SH/64)))
+  love.graphics.setBackgroundColor(CLR.BLACK)
+  CUR.H = love.mouse.getSystemCursor("hand")
+  CUR.I = love.mouse.getSystemCursor("ibeam")
   loadImages()
   if isServer then
     server_data = loadServerData()
@@ -86,7 +88,7 @@ end
 
 function loadServerData()
   local data = {}
-  love.filesystem.setIdentity("Concussion_Server")
+  love.filesystem.setIdentity("Zabutongl_Server")
   if love.filesystem.exists("player_list.lua") then
     import_string = love.filesystem.read("player_list.lua")
     data = Tserial.unpack(import_string)

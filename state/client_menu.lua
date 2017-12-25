@@ -2,6 +2,7 @@ client_menu = {}
 
 local buttons = {}
 local fields = {}
+local labels = {}
 
 function client_menu:init()
   
@@ -13,13 +14,10 @@ function client_menu:update(dt)
   local highlightButton = false
   local highlightField = false
   
-  
-  
-  
   if highlightButton then
-    love.mouse.setCursor(cur_highlight)
+    love.mouse.setCursor(CUR.H)
   elseif highlightField then
-    love.mouse.setCursor(cur_field)
+    love.mouse.setCursor(CUR.I)
   else
     love.mouse.setCursor()
   end

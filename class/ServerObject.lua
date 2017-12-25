@@ -83,7 +83,7 @@ ServerObject = Class{
   
   draw = function(self)
     love.graphics.print(self.sender:getSocketAddress(), 5, 5)
-    love.graphics.printf("Server Running!", SWIDTH/2-100, floor(SHEIGHT/4), 200, "center", 0, 1, 1, 0, love.graphics.getFont():getHeight()/2)
+    love.graphics.printf("Server Running!", SW/2-100, floor(SH/4), 200, "center", 0, 1, 1, 0, love.graphics.getFont():getHeight()/2)
     
     self:drawPlayerList(600, 300)
     self:drawLobbyList(150, 300)
@@ -97,7 +97,7 @@ ServerObject = Class{
     end
     
     love.graphics.setColor(WHITE)
-    love.graphics.rectangle("line", x, y, SWIDTH/4, SHEIGHT/2)
+    love.graphics.rectangle("line", x, y, SW/4, SH/2)
     love.graphics.setColor(WHITE)
     love.graphics.print("Players Online:", x, y-love.graphics.getFont():getHeight())
     
@@ -105,7 +105,7 @@ ServerObject = Class{
   
   drawLobbyList = function(self,x,y)
     love.graphics.setColor(WHITE)
-    love.graphics.rectangle("line", x, y, SWIDTH/4, SHEIGHT/2)
+    love.graphics.rectangle("line", x, y, SW/4, SH/2)
     love.graphics.setColor(WHITE)
     love.graphics.print("Live Lobbies:", x, y-love.graphics.getFont():getHeight())
   end;
