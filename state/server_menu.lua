@@ -1,13 +1,15 @@
 server_menu = {}
 
+local buttons = {}
 local fields = {}
+local labels = {}
 
 server = nil
 
 function server_menu:init()
   mousePointer = HC.point(love.mouse.getX(), love.mouse.getY())
-  but_startServer = Button(math.floor(SWIDTH/2), math.floor(SHEIGHT/6), SWIDTH/8, SHEIGHT/14, "Start Server")
-  fields.ip = FillableField(math.floor(SWIDTH/2), math.floor(SHEIGHT/10), SWIDTH/8, SHEIGHT/30, ipAddress, false)
+  buttons.startServer = Button(math.floor(SW/2), math.floor(SH/6), SW/8, SH/14, "Start Server")
+  fields.ip = FillableField(math.floor(SW/2), math.floor(SH/10), SW/8, SH/30, ipAddress, false)
 end
 
 function server_menu:update(dt)
@@ -27,9 +29,9 @@ function server_menu:update(dt)
   end
   
   if highlightButton then
-    love.mouse.setCursor(cur_highlight)
+    love.mouse.setCursor(CUR.H)
   elseif highlightField then
-    love.mouse.setCursor(cur_field)
+    love.mouse.setCursor(CUR.I)
   else
     love.mouse.setCursor()
   end
@@ -40,9 +42,9 @@ function server_menu:update(dt)
 end
 
 function server_menu:draw()
-  love.graphics.setColor(WHITE)
+  love.graphics.setColor(CLR.WHITE)
   
-  but_startServer:draw()
+  buttons.startServer:draw()
   
   for i, field in pairs(fields) do
     field:draw()
@@ -80,14 +82,14 @@ end
 
 function server_menu:mousepressed(x,y,button,isTouch)
   if button == 1 then
-    if but_startServer:highlight(mousePointer) then
+    if buttons.startServer:highlight(mousePointer) then
       if server == nil then
         server = ServerObject(fields.ip:getvalue(), 1992, server_data)
-        but_startServer.text = "Stop Server"
+        buttons.startServer.text = "Stop Server"
       else
         server.sender:destroy()
         server = nil
-        but_startServer.text = "Start Server"
+        buttons.startServer.text = "Start Server"
       end
     end
     for i, field in pairs(fields) do

@@ -4,21 +4,22 @@ local user_data = {}
 
 local fields = {}
 local buttons = {}
+local labels = {}
 
 local passwordsMatch = false
 
 function register:init()
   mousePointer = HC.point(love.mouse.getX(), love.mouse.getY())
-  buttons.register = Button(math.floor(SWIDTH/2), math.floor(5*SHEIGHT/8), SWIDTH/8, SHEIGHT/12, "Submit Registration")
-  buttons.swapMode = Button(math.floor(SWIDTH/2+SWIDTH/34), math.floor(71*SHEIGHT/100), SWIDTH/15, SHEIGHT/30, "Login")
+  buttons.register = Button(1/2, 5*1/8, 1/8, 1/12, "Submit Registration")
+  buttons.swapMode = Button(1/2+1/34, 71/100, 1/15, 1/30, "Login")
   
   buttons.register.isSelectable = false
   
-  fields.username = FillableField(math.floor(SWIDTH/2), math.floor(SHEIGHT/2-5*SHEIGHT/40), SWIDTH/8, SHEIGHT/20, "Enter Username", false)
-  fields.password = FillableField(math.floor(SWIDTH/2), math.floor(SHEIGHT/2-2*SHEIGHT/40), SWIDTH/8, SHEIGHT/20, "Enter Password", false, true)
-  fields.confirmPassword = FillableField(math.floor(SWIDTH/2), math.floor(SHEIGHT/2+SHEIGHT/40), SWIDTH/8, SHEIGHT/20, "Confirm Password", false, true)
+  fields.username = FillableField(1/2, 1/2-5/40, 1/8, 1/20, "Enter Username", false)
+  fields.password = FillableField(1/2, 1/2-2/40, 1/8, 1/20, "Enter Password", false, true)
+  fields.confirmPassword = FillableField(1/2, 1/2+1/40, 1/8, 1/20, "Confirm Password", false, true)
   
-  fields.ip = FillableField(math.floor(SWIDTH/2), math.floor(SHEIGHT/10), SWIDTH/8, SHEIGHT/20, ipAddress, false)
+  fields.ip = FillableField(1/2, 1/10, 1/8, 1/20, ipAddress, false)
 end
 
 function register:update(dt)
@@ -56,9 +57,9 @@ function register:update(dt)
   end
   
   if highlightButton then
-    love.mouse.setCursor(cur_highlight)
+    love.mouse.setCursor(CUR.H)
   elseif highlightField then
-    love.mouse.setCursor(cur_field)
+    love.mouse.setCursor(CUR.I)
   else
     love.mouse.setCursor()
   end
@@ -78,11 +79,11 @@ function register:draw()
   end
   
   if passwordsMatch then
-    love.graphics.setColor(GREEN)
-    love.graphics.print("O", SWIDTH/2 + SWIDTH/12, SHEIGHT/2 + SHEIGHT/45, 0, 1, 1, 0, math.floor(love.graphics.getFont():getHeight()/3))
+    love.graphics.setColor(CLR.GREEN)
+    love.graphics.print("O", SW/2 + SW/12, SH/2 + SH/45, 0, 1, 1, 0, math.floor(love.graphics.getFont():getHeight()/3))
   else
-    love.graphics.setColor(RED)
-    love.graphics.print("X", SWIDTH/2 + SWIDTH/12, SHEIGHT/2 + SHEIGHT/45, 0, 1, 1, 0, math.floor(love.graphics.getFont():getHeight()/3))
+    love.graphics.setColor(CLR.RED)
+    love.graphics.print("X", SW/2 + SW/12, SH/2 + SH/45, 0, 1, 1, 0, math.floor(love.graphics.getFont():getHeight()/3))
   end
 end
 

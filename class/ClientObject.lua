@@ -87,7 +87,7 @@ ClientObject = Class{
     end
     
     love.graphics.setColor(WHITE)
-    love.graphics.rectangle("line", x, y, SWIDTH/4, SHEIGHT/2)
+    love.graphics.rectangle("line", x, y, SW/4, SH/2)
     love.graphics.setColor(WHITE)
     love.graphics.print("Players Online:", x, y-love.graphics.getFont():getHeight())
     
@@ -102,7 +102,7 @@ ClientObject = Class{
     end
     
     love.graphics.setColor(WHITE)
-    love.graphics.rectangle("line", x, y, SWIDTH/4, SHEIGHT/2)
+    love.graphics.rectangle("line", x, y, SW/4, SH/2)
     love.graphics.setColor(WHITE)
     love.graphics.print("Live Lobbies:", x, y-love.graphics.getFont():getHeight())
   end;

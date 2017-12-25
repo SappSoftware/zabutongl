@@ -4,18 +4,19 @@ local user_data = {}
 
 local fields = {}
 local buttons = {}
+local labels = {}
 
 function login:init()
   mousePointer = HC.point(love.mouse.getX(), love.mouse.getY())
-  buttons.login = Button(math.floor(SWIDTH/2), math.floor(5*SHEIGHT/8), SWIDTH/8, SHEIGHT/12, "Connect to Server")
-  buttons.swapMode = Button(math.floor(SWIDTH/2+SWIDTH/34), math.floor(71*SHEIGHT/100), SWIDTH/15, SHEIGHT/30, "Register")
+  buttons.login = Button(.5, 5/8, 1/8, 1/12, "Connect to Server")
+  buttons.swapMode = Button(0.53, .71, 1/15, 1/30, "Register")
   
   buttons.login.isSelectable = false
   
-  fields.username = FillableField(math.floor(SWIDTH/2), math.floor(SHEIGHT/2-SHEIGHT/20), SWIDTH/8, SHEIGHT/20, "Enter Username", false)
-  fields.password = FillableField(math.floor(SWIDTH/2), math.floor(SHEIGHT/2+SHEIGHT/40), SWIDTH/8, SHEIGHT/20, "Enter Password", false, true)
+  fields.username = FillableField(1/2, .45, 1/8, 1/20, "Enter Username", false)
+  fields.password = FillableField(.5, .525, 1/8, 1/20, "Enter Password", false, true)
   
-  fields.ip = FillableField(math.floor(SWIDTH/2), math.floor(SHEIGHT/10), SWIDTH/8, SHEIGHT/20, ipAddress, false)
+  fields.ip = FillableField(.5, .1, 1/8, 1/20, ipAddress, false)
 end
 
 function login:update(dt)
@@ -48,9 +49,9 @@ function login:update(dt)
   end
   
   if highlightButton then
-    love.mouse.setCursor(cur_highlight)
+    love.mouse.setCursor(CUR.H)
   elseif highlightField then
-    love.mouse.setCursor(cur_field)
+    love.mouse.setCursor(CUR.I)
   else
     love.mouse.setCursor()
   end
