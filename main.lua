@@ -12,6 +12,9 @@ Gamestate = require "hump.gamestate"
 Class = require "hump.class"
 Vector = require "hump.vector"
 
+require "CLR"
+require "helper"
+
 require "Tserial"
 
 require "class/ServerObject"
@@ -19,6 +22,8 @@ require "class/ClientObject"
 require "class/Button"
 require "class/FillableField"
 require "class/Label"
+require "class/Zone"
+require "class/Player"
 
 require "state/server_menu"
 require "state/client_menu"
@@ -30,29 +35,26 @@ sprites = {}
 SW = love.graphics.getWidth()
 SH = love.graphics.getHeight()
 
-CLR = {}
-CLR.WHITE = {255,255,255}
-CLR.BLACK = {0,0,0}
-CLR.RED = {255,0,0}
-CLR.GREEN = {0,255,0}
-CLR.GREY = {177,177,177}
-
 CUR = {}
 
 FONT_SIZE = 24
 
-mousePointer = {}
+mousePos = {}
 
 ipAddress = "192.168.0.16"
 
 function love.load(arg)
   if debug then require("mobdebug").start() end
+  fpsCounter = Label("FPS", .015, .03, "left", CLR.WHITE)
   Gamestate.registerEvents()
   love.keyboard.setKeyRepeat(true)
   love.graphics.setFont(love.graphics.newFont(math.floor(SH/64)))
   love.graphics.setBackgroundColor(CLR.BLACK)
   CUR.H = love.mouse.getSystemCursor("hand")
   CUR.I = love.mouse.getSystemCursor("ibeam")
+  --timeTest1()
+  --timeTest2()
+  --timeTest3()
   loadImages()
   if isServer then
     server_data = loadServerData()
@@ -90,11 +92,91 @@ function loadServerData()
   local data = {}
   love.filesystem.setIdentity("Zabutongl_Server")
   if love.filesystem.exists("player_list.lua") then
-    import_string = love.filesystem.read("player_list.lua")
+    local import_string = love.filesystem.read("player_list.lua")
     data = Tserial.unpack(import_string)
   else
     love.filesystem.write("player_list.lua", Tserial.pack(data))
   end
   
   return data
+end
+
+function timeTest1()
+  local n = 1000000
+  local x1 = -68
+  local y1 = 26
+  local r1 = 100
+  
+  local x2 = 151
+  local y2 = -44
+  local r2 = 60
+  local time = 0
+  local t1 = love.timer:getTime()
+  for i = 0, n do
+    if ((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1) < 2 * (r1 + r2)) then
+      --Collision
+    end
+  end
+  local t2 = love.timer:getTime()
+  time = t2 - t1
+  print("factored form circle: " .. time)
+end
+
+function timeTest2()
+  local n = 1000000
+  local x1 = 44
+  local y1 = -12
+  local w1 = 100
+  local h1 = 100
+  
+  local x2 = -20
+  local y2 = 27
+  local w2 = 100
+  local h2 = 100
+  local time = 0
+  
+  local t1 = love.timer:getTime()
+  for i = 0, n do
+    
+    if(x1 + w1 > x2 and x1 < x2 + w2 and y1 + h1 > y2 and y1 < y2 + h2) then
+      --Collision
+    end
+    
+    
+  end
+  local t2 = love.timer:getTime()
+  time = (t2 - t1)
+  print("square compound: " .. time)
+end
+
+function timeTest3()
+  local n = 1000000
+  local x1 = 44
+  local y1 = -12
+  local w1 = 100
+  local h1 = 100
+  
+  local x2 = -20
+  local y2 = 27
+  local w2 = 100
+  local h2 = 100
+  local time = 0
+  
+  local t1 = love.timer:getTime()
+  for i = 0, n do
+    
+  if(x1 + w1 > x2) then
+    if(x1 < x2 + w2) then
+       if(y1 + h1 > y2) then
+          if(y1 < y2 + h2) then
+             -- Collision!
+          end
+       end
+    end
+  end
+    
+  end
+  local t2 = love.timer:getTime()
+  time = (t2 - t1)
+  print("square nested: " .. time)
 end

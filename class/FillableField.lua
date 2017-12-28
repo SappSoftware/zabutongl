@@ -142,11 +142,19 @@ FillableField = Class{__includes = Button,
   
   draw = function(self)
     if self.isActive then
-      love.graphics.setColor(CLR.WHITE)
-      self.body:draw("line")
-      love.graphics.setColor(CLR.WHITE)
-      local linex = 0
-      local display_text = ""
+      if self.isSelectable then
+        love.graphics.setColor(CLR.WHITE)
+        self.body:draw("line")
+        love.graphics.setColor(CLR.WHITE)
+        local linex = 0
+        local display_text = ""
+      else
+        love.graphics.setColor(CLR.GREY)
+        self.body:draw("line")
+        love.graphics.setColor(CLR.GREY)
+        local linex = 0
+        local display_text = ""
+      end
       
       if self.isPrivate and self.text ~= self.default_text then
         display_text = string.rep("*", string.len(self.text))

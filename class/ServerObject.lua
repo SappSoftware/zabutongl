@@ -6,9 +6,9 @@ ServerObject = Class{
     self.sender = Sock.newServer(ip, port)
     self.sender:setSerialization(Bitser.dumps, Bitser.loads)
     self:setCallbacks()
-    self.lobbyList = {}
     self.playerList = {}
     self.fullPlayerList = playerListData
+    self.activeZone = Zone()
   end;
   
   setCallbacks = function(self)
@@ -17,9 +17,11 @@ ServerObject = Class{
       "username"
     })
     
-    self.sender:setSchema("updateMenuLists", {
-      "playerList",
-      "lobbyList"
+    self.sender:setSchema("updatePlayer", {
+      "x",
+      "y",
+      "dir",
+      "player_id"
     })
     
     self.sender:on("connect", function(data, client)
@@ -64,8 +66,10 @@ ServerObject = Class{
       client:send("login", success)
     end)
     
-    self.sender:on("createLobby", function(data, client)
-      
+    self.sender:on("joinZone", function(data, client)
+      local index = client:getIndex()
+      local player_id = data
+      self.activeZone:addPlayer(Player(player_id), index)
     end)
   end;
   
@@ -76,8 +80,6 @@ ServerObject = Class{
     
     if self.tick >= self.tickRate then
       self.tick = 0
-      
-      self.sender:sendToAll("updateMenuLists", {self.playerList, self.lobbyList})
     end
   end;
   
@@ -86,28 +88,20 @@ ServerObject = Class{
     love.graphics.printf("Server Running!", SW/2-100, floor(SH/4), 200, "center", 0, 1, 1, 0, love.graphics.getFont():getHeight()/2)
     
     self:drawPlayerList(600, 300)
-    self:drawLobbyList(150, 300)
   end;
   
   drawPlayerList = function(self,x,y)
-    love.graphics.setColor(WHITE)
+    love.graphics.setColor(CLR.WHITE)
     local i = 0
     for id, player in pairs(self.playerList) do
       love.graphics.print(player, x, y+i*love.graphics.getFont():getHeight())
     end
     
-    love.graphics.setColor(WHITE)
+    love.graphics.setColor(CLR.WHITE)
     love.graphics.rectangle("line", x, y, SW/4, SH/2)
-    love.graphics.setColor(WHITE)
+    love.graphics.setColor(CLR.WHITE)
     love.graphics.print("Players Online:", x, y-love.graphics.getFont():getHeight())
     
-  end;
-  
-  drawLobbyList = function(self,x,y)
-    love.graphics.setColor(WHITE)
-    love.graphics.rectangle("line", x, y, SW/4, SH/2)
-    love.graphics.setColor(WHITE)
-    love.graphics.print("Live Lobbies:", x, y-love.graphics.getFont():getHeight())
   end;
   
   updatePlayerFile = function(self)

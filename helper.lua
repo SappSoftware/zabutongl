@@ -24,3 +24,24 @@ deepCopy = function(object)
     end
     return _copy(object)
 end
+
+toSeed = function(seed)
+  --todo: maybe find way of generating more diverse numberset?
+  local returnSeed = 0
+  
+  temp = tostring(seed)
+  for i = 1, temp:len(), 1 do
+    if i % 2 == 0 then
+      returnSeed = returnSeed * temp:byte(i)
+    elseif i % 2 == 1 then
+      returnSeed = returnSeed + temp:byte(i)
+    end
+  end
+  
+  return returnSeed
+end
+
+drawFPS = function(fpsLabel)
+  fpsLabel:settext(love.timer:getFPS())
+  fpsLabel:draw()
+end
