@@ -9,7 +9,7 @@ function client_menu:init()
 end
 
 function client_menu:update(dt)
-  mousePointer:moveTo(love.mouse.getX(), love.mouse.getY())
+  mousePos:moveTo(love.mouse.getX(), love.mouse.getY())
   
   local highlightButton = false
   local highlightField = false
@@ -26,10 +26,9 @@ function client_menu:update(dt)
 end
 
 function client_menu:draw()
+  drawFPS(fpsCounter)
   if client ~= nil then
     client:draw()
-    client:drawPlayerList(600, 300)
-    client:drawLobbyList(150, 300)
   end
   
   for i, button in pairs(buttons) do

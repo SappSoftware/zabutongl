@@ -7,7 +7,7 @@ local buttons = {}
 local labels = {}
 
 function login:init()
-  mousePointer = HC.point(love.mouse.getX(), love.mouse.getY())
+  mousePos = HC.point(love.mouse.getX(), love.mouse.getY())
   buttons.login = Button(.5, 5/8, 1/8, 1/12, "Connect to Server")
   buttons.swapMode = Button(0.53, .71, 1/15, 1/30, "Register")
   
@@ -23,23 +23,7 @@ function login:update(dt)
   if client ~= nil then
     client:update(dt)
   end
-  
-  local highlightButton = false
-  local highlightField = false
-  mousePointer:moveTo(love.mouse.getX(), love.mouse.getY())
-  
-  for i, button in pairs(buttons) do
-    if button:highlight(mousePointer) then
-      highlightButton = true
-    end
-  end
-  
-  for i, field in pairs(fields) do
-    field:update(dt)
-    if field:highlight(mousePointer) then
-      highlightField = true
-    end
-  end
+  self:handleMouse(dt)
   
   if fields.username:getvalue() ~= fields.username.default_text and string.gsub(fields.username:getvalue(), " ", "") ~= "" 
   and fields.password:getvalue() ~= fields.password.default_text and string.gsub(fields.password:getvalue(), " ", "") ~= "" then
@@ -47,17 +31,10 @@ function login:update(dt)
   else
     buttons.login.isSelectable = false
   end
-  
-  if highlightButton then
-    love.mouse.setCursor(CUR.H)
-  elseif highlightField then
-    love.mouse.setCursor(CUR.I)
-  else
-    love.mouse.setCursor()
-  end
 end
 
 function login:draw()
+  drawFPS(fpsCounter)
   if client ~= nil then
     client:draw()
   end
@@ -99,7 +76,7 @@ end
 
 function login:mousepressed(x,y,button,isTouch)
   if button == 1 then
-    if buttons.login:highlight(mousePointer) then
+    if buttons.login:highlight(mousePos) then
       if client ~= nil then
         client.sender:disconnectNow(1)
         client = nil
@@ -108,7 +85,7 @@ function login:mousepressed(x,y,button,isTouch)
       user_data.password = fields.password:getvalue()
       client = ClientObject(fields.ip:getvalue(), 1992, user_data, false)
     end
-    if buttons.swapMode:highlight(mousePointer) then
+    if buttons.swapMode:highlight(mousePos) then
       Gamestate.switch(register)
     end
     
@@ -130,5 +107,33 @@ function login:cycleControl(index)
     fields.password:gainControl()
   elseif index == "password" then
     fields.username:gainControl()
+  end
+end
+
+function login:handleMouse(dt)
+  mousePos:moveTo(love.mouse.getX(), love.mouse.getY())
+  local highlightButton = false
+  local highlightField = false
+  
+  for key, button in pairs(buttons) do
+    button:update(dt)
+    if button:highlight(mousePos) then
+      highlightButton = true
+    end
+  end
+  
+  for key, field in pairs(fields) do
+    field:update(dt)
+    if field:highlight(mousePos) then
+      highlightField = true
+    end
+  end
+  
+  if highlightButton then
+    love.mouse.setCursor(CUR.H)
+  elseif highlightField then
+    love.mouse.setCursor(CUR.I)
+  else
+    love.mouse.setCursor()
   end
 end

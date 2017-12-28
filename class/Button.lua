@@ -13,6 +13,10 @@ Button = Class{
     self.isSelectable = true
   end;
   
+  update = function(self, dt)
+    
+  end;
+  
   draw = function(self)
     if self.isActive then
       if self.isSelectable then

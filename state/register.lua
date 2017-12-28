@@ -9,7 +9,7 @@ local labels = {}
 local passwordsMatch = false
 
 function register:init()
-  mousePointer = HC.point(love.mouse.getX(), love.mouse.getY())
+  mousePos = HC.point(love.mouse.getX(), love.mouse.getY())
   buttons.register = Button(1/2, 5*1/8, 1/8, 1/12, "Submit Registration")
   buttons.swapMode = Button(1/2+1/34, 71/100, 1/15, 1/30, "Login")
   
@@ -29,17 +29,17 @@ function register:update(dt)
   
   local highlightButton = false
   local highlightField = false
-  mousePointer:moveTo(love.mouse.getX(), love.mouse.getY())
+  mousePos:moveTo(love.mouse.getX(), love.mouse.getY())
   
   for i, button in pairs(buttons) do
-    if button:highlight(mousePointer) then
+    if button:highlight(mousePos) then
       highlightButton = true
     end
   end
   
   for i, field in pairs(fields) do
     field:update(dt)
-    if field:highlight(mousePointer) then
+    if field:highlight(mousePos) then
       highlightField = true
     end
   end
@@ -66,6 +66,7 @@ function register:update(dt)
 end
 
 function register:draw()
+  drawFPS(fpsCounter)
   if client ~= nil then
     client:draw()
   end
@@ -115,7 +116,7 @@ end
 
 function register:mousepressed(x,y,button,isTouch)
   if button == 1 then
-    if buttons.register:highlight(mousePointer) then
+    if buttons.register:highlight(mousePos) then
       if client ~= nil then
         client.sender:disconnectNow(1)
         client = nil
@@ -124,7 +125,7 @@ function register:mousepressed(x,y,button,isTouch)
       user_data.password = fields.password:getvalue()
       client = ClientObject(fields.ip:getvalue(), 1992, user_data, true)
     end
-    if buttons.swapMode:highlight(mousePointer) then
+    if buttons.swapMode:highlight(mousePos) then
       Gamestate.switch(login)
     end
     

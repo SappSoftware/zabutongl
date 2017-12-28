@@ -85,7 +85,7 @@ end
 
 -- shape constructors
 function HC:polygon(...)
-	return self:register(newPolygonShape(...))
+	return newPolygonShape(...)
 end
 
 function HC:rectangle(x,y,w,h)
@@ -93,11 +93,11 @@ function HC:rectangle(x,y,w,h)
 end
 
 function HC:circle(x,y,r)
-	return self:register(newCircleShape(x,y,r))
+	return newCircleShape(x,y,r)
 end
 
 function HC:point(x,y)
-	return self:register(newPointShape(x,y))
+	return newPointShape(x,y)
 end
 
 -- collision detection
