@@ -42,6 +42,7 @@ toSeed = function(seed)
 end
 
 drawFPS = function(fpsLabel)
+  
   fpsLabel:settext(love.timer:getFPS())
   fpsLabel:draw()
 end
