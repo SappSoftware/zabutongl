@@ -16,8 +16,8 @@ function login:init()
   
   buttons.login.isSelectable = false
   
-  fields.username = FillableField(1/2, .45, 1/8, 1/20, "Enter Username", false)
-  fields.password = FillableField(.5, .525, 1/8, 1/20, "Enter Password", false, true)
+  fields.username = FillableField(1/2, .45, 1/8, 1/20, "Enter Username", false, true)
+  fields.password = FillableField(.5, .525, 1/8, 1/20, "Enter Password", false, true, true)
   
   fields.ip = FillableField(.5, .1, 1/8, 1/20, ipAddress, false)
 end
@@ -30,11 +30,27 @@ function login:enter(from)
 end
 
 function login:update(dt)
+<<<<<<< HEAD
   TICK = TICK + dt
   self:handleMouse(dt)
   local x,y = mousePos:center()
   test = x .. ", " .. y
   testmousefast:moveTo(x,y)
+=======
+  self:handleMouse(dt)
+  
+  if client ~= nil then
+    client:update(dt)
+  end
+  
+  for i, button in pairs(buttons) do
+    button:update(dt)
+  end
+  
+  for i, field in pairs(fields) do
+    field:update(dt)
+  end
+>>>>>>> d3bac5ab95a2c6543610c7b070cc2e9ef8a378db
   
   if TICK >= FPS then
     testmouseslow:moveTo(x,y)

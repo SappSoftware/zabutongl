@@ -41,10 +41,14 @@ FNT = {}
 
 mousePos = {}
 
+<<<<<<< HEAD
 TICK = 0
 FPS = 1/60
 
 ipAddress = "192.168.0.16"
+=======
+ipAddress = "10.246.205.96"
+>>>>>>> d3bac5ab95a2c6543610c7b070cc2e9ef8a378db
 
 function love.load(arg)
   if debug then require("mobdebug").start() end
