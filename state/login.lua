@@ -30,13 +30,8 @@ function login:enter(from)
 end
 
 function login:update(dt)
-<<<<<<< HEAD
+  
   TICK = TICK + dt
-  self:handleMouse(dt)
-  local x,y = mousePos:center()
-  test = x .. ", " .. y
-  testmousefast:moveTo(x,y)
-=======
   self:handleMouse(dt)
   
   if client ~= nil then
@@ -50,7 +45,6 @@ function login:update(dt)
   for i, field in pairs(fields) do
     field:update(dt)
   end
->>>>>>> d3bac5ab95a2c6543610c7b070cc2e9ef8a378db
   
   if TICK >= FPS then
     testmouseslow:moveTo(x,y)
