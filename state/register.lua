@@ -15,33 +15,18 @@ function register:init()
   
   buttons.register.isSelectable = false
   
-  fields.username = FillableField(1/2, 1/2-5/40, 1/8, 1/20, "Enter Username", false)
-  fields.password = FillableField(1/2, 1/2-2/40, 1/8, 1/20, "Enter Password", false, true)
-  fields.confirmPassword = FillableField(1/2, 1/2+1/40, 1/8, 1/20, "Confirm Password", false, true)
+  fields.username = FillableField(1/2, 1/2-5/40, 1/8, 1/20, "Enter Username", false, true)
+  fields.password = FillableField(1/2, 1/2-2/40, 1/8, 1/20, "Enter Password", false, true, true)
+  fields.confirmPassword = FillableField(1/2, 1/2+1/40, 1/8, 1/20, "Confirm Password", false, true, true)
   
   fields.ip = FillableField(1/2, 1/10, 1/8, 1/20, ipAddress, false)
 end
 
 function register:update(dt)
+  self:handleMouse(dt)
+  
   if client ~= nil then
     client:update(dt)
-  end
-  
-  local highlightButton = false
-  local highlightField = false
-  mousePos:moveTo(love.mouse.getX(), love.mouse.getY())
-  
-  for i, button in pairs(buttons) do
-    if button:highlight(mousePos) then
-      highlightButton = true
-    end
-  end
-  
-  for i, field in pairs(fields) do
-    field:update(dt)
-    if field:highlight(mousePos) then
-      highlightField = true
-    end
   end
   
   if fields.password:getvalue() == fields.confirmPassword:getvalue() and string.gsub(fields.password:getvalue(), " ", "") ~= "" and fields.password:getvalue() ~= fields.password.default_text then
@@ -54,14 +39,6 @@ function register:update(dt)
   else
     passwordsMatch = false
     buttons.register.isSelectable = false
-  end
-  
-  if highlightButton then
-    love.mouse.setCursor(CUR.H)
-  elseif highlightField then
-    love.mouse.setCursor(CUR.I)
-  else
-    love.mouse.setCursor()
   end
 end
 
@@ -152,3 +129,30 @@ function register:cycleControl(index)
   end
 end
 
+function register:handleMouse(dt)
+  mousePos:moveTo(love.mouse.getX(), love.mouse.getY())
+  local highlightButton = false
+  local highlightField = false
+  
+  for key, button in pairs(buttons) do
+    button:update(dt)
+    if button:highlight(mousePos) then
+      highlightButton = true
+    end
+  end
+  
+  for key, field in pairs(fields) do
+    field:update(dt)
+    if field:highlight(mousePos) then
+      highlightField = true
+    end
+  end
+  
+  if highlightButton then
+    love.mouse.setCursor(CUR.H)
+  elseif highlightField then
+    love.mouse.setCursor(CUR.I)
+  else
+    love.mouse.setCursor()
+  end
+end

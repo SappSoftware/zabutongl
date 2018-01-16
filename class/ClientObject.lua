@@ -48,18 +48,18 @@ ClientObject = Class{
         self.sender:disconnectNow(1)
       end
     end)
+    
+    self.sender:on("joinZone", function(data)
+      
+    end)  
   end;
   
   update = function(self, dt)
-    self.sender:update()
-    
-    if self.sender:getState() == "connected" then
-      self.tick = self.tick + dt
-    end
+    self.tick = self.tick + dt
     
     if self.tick >= self.tickRate then
+      self.sender:update(self.tick)
       self.tick = 0
-      
     end
   end;
   

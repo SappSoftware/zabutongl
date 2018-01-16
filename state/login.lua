@@ -13,17 +13,26 @@ function login:init()
   
   buttons.login.isSelectable = false
   
-  fields.username = FillableField(1/2, .45, 1/8, 1/20, "Enter Username", false)
-  fields.password = FillableField(.5, .525, 1/8, 1/20, "Enter Password", false, true)
+  fields.username = FillableField(1/2, .45, 1/8, 1/20, "Enter Username", false, true)
+  fields.password = FillableField(.5, .525, 1/8, 1/20, "Enter Password", false, true, true)
   
   fields.ip = FillableField(.5, .1, 1/8, 1/20, ipAddress, false)
 end
 
 function login:update(dt)
+  self:handleMouse(dt)
+  
   if client ~= nil then
     client:update(dt)
   end
-  self:handleMouse(dt)
+  
+  for i, button in pairs(buttons) do
+    button:update(dt)
+  end
+  
+  for i, field in pairs(fields) do
+    field:update(dt)
+  end
   
   if fields.username:getvalue() ~= fields.username.default_text and string.gsub(fields.username:getvalue(), " ", "") ~= "" 
   and fields.password:getvalue() ~= fields.password.default_text and string.gsub(fields.password:getvalue(), " ", "") ~= "" then

@@ -41,7 +41,7 @@ FONT_SIZE = 24
 
 mousePos = {}
 
-ipAddress = "192.168.0.16"
+ipAddress = "10.246.205.96"
 
 function love.load(arg)
   if debug then require("mobdebug").start() end
