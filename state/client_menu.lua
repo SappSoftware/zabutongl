@@ -9,18 +9,7 @@ function client_menu:init()
 end
 
 function client_menu:update(dt)
-  mousePos:moveTo(love.mouse.getX(), love.mouse.getY())
-  
-  local highlightButton = false
-  local highlightField = false
-  
-  if highlightButton then
-    love.mouse.setCursor(CUR.H)
-  elseif highlightField then
-    love.mouse.setCursor(CUR.I)
-  else
-    love.mouse.setCursor()
-  end
+  self:handleMouse(dt)
   
   client:update(dt)
 end
@@ -53,5 +42,33 @@ end
 function client_menu:quit()
   if client ~= nil then
     client.sender:disconnectNow()
+  end
+end
+
+function client_menu:handleMouse(dt)
+  mousePos:moveTo(love.mouse.getX(), love.mouse.getY())
+  local highlightButton = false
+  local highlightField = false
+  
+  for key, button in pairs(buttons) do
+    button:update(dt)
+    if button:highlight(mousePos) then
+      highlightButton = true
+    end
+  end
+  
+  for key, field in pairs(fields) do
+    field:update(dt)
+    if field:highlight(mousePos) then
+      highlightField = true
+    end
+  end
+  
+  if highlightButton then
+    love.mouse.setCursor(CUR.H)
+  elseif highlightField then
+    love.mouse.setCursor(CUR.I)
+  else
+    love.mouse.setCursor()
   end
 end

@@ -70,15 +70,15 @@ ServerObject = Class{
       local index = client:getIndex()
       local player_id = data
       self.activeZone:addPlayer(Player(player_id), index)
+      client:send("joinZone", self.activeZone)
     end)
   end;
   
   update = function(self, dt)
-    self.sender:update()
-    
     self.tick = self.tick + dt
     
     if self.tick >= self.tickRate then
+      self.sender:update(self.tick)
       self.tick = 0
     end
   end;

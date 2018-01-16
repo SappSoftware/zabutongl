@@ -161,10 +161,13 @@ FillableField = Class{__includes = Button,
         
       else
         display_text = self.text
-        if self.hasTitle then
-          love.graphics.printf(self.title, self.x+self.xOffset, math.floor(self.y-self.yOffset/2), self.w-self.xOffset, "left", 0, 1, 1, 0, love.graphics.getFont():getHeight()/2)
-        end
+        
       end
+      
+      if self.hasTitle then
+        love.graphics.printf(self.title, self.x+self.xOffset, math.floor(self.y-self.yOffset/2), self.w-self.xOffset, "left", 0, 1, 1, 0, love.graphics.getFont():getHeight()/2)
+      end
+        
       love.graphics.printf(display_text, self.x+self.xOffset, self.y+self.yOffset, self.w-self.xOffset, "left", 0, 1, 1, 0, love.graphics.getFont():getHeight()/2)
       linex = self.x+self.xOffset+love.graphics.getFont():getWidth(display_text:sub(1, self.lineIndex))
       

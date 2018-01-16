@@ -15,6 +15,14 @@ end
 function server_menu:update(dt)
   self:handleMouse(dt)
   
+  for i, button in pairs(buttons) do
+    button:update(dt)
+  end
+  
+  for i, field in pairs(fields) do
+    field:update(dt)
+  end
+  
   if server ~= nil then
     server:update(dt)
   end
