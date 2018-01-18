@@ -23,7 +23,7 @@ function login:update(dt)
   self:handleMouse(dt)
   
   if client ~= nil then
-    client:update(dt)
+    client:update_menu(dt)
   end
   
   for i, button in pairs(buttons) do

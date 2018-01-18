@@ -10,6 +10,7 @@ ClientObject = Class{
     self:setCallbacks()
     self.sender:connect()
     self.activeZone = {}
+    self.player = Player(self.user_data.username)
   end;
   
   setCallbacks = function(self)
@@ -50,20 +51,41 @@ ClientObject = Class{
     end)
     
     self.sender:on("joinZone", function(data)
-      
+      self.activeZone = Zone(data.left, data.right, data.up, data.down)
     end)  
   end;
   
-  update = function(self, dt)
+  update_menu = function(self, dt)
     self.tick = self.tick + dt
     
     if self.tick >= self.tickRate then
       self.sender:update(self.tick)
+      
       self.tick = 0
     end
   end;
   
-  draw = function(self)
+  update_game = function(self, dt)
+    self.tick = self.tick + dt
+    
+    if self.tick >= self.tickRate then
+      self.sender:update(self.tick)
+      
+      if self.activeZone ~= {} then
+        self.player:update(dt)
+        
+        local data = {self.player:getUpdate()}
+        self.sender:send("updatePlayer", data)
+      end
+      self.tick = 0
+    end
+  end;
+  
+  draw= function(self)
     love.graphics.print(self.sender:getState(), 5, 5)
+  end;
+  
+  joinZone = function(self)
+    self.sender:send("joinZone", self.player.player_id)
   end;
   }

@@ -11,6 +11,7 @@ Shape = require "hc.shapes"
 Gamestate = require "hump.gamestate"
 Class = require "hump.class"
 Vector = require "hump.vector"
+Camera = require "hump.camera"
 
 require "CLR"
 require "helper"
@@ -29,6 +30,7 @@ require "state/server_menu"
 require "state/client_menu"
 require "state/login"
 require "state/register"
+require "state/game"
 
 sprites = {}
 

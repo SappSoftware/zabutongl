@@ -39,4 +39,14 @@ Player = Class{
     self.pos = self.pos + self.velocity
     self.mask:moveTo(self.pos:unpack())
   end;
+  
+  updateExt = function(self, x, y, dir)
+    self.pos:moveTo(x,y)
+    self.dir = dir
+    self.mask:moveTo(self.pos:unpack())
+  end;
+  
+  getUpdate = function(self)
+    return self.pos.x, self.pos.y, self.dir, self.player_id
+  end;
 }
