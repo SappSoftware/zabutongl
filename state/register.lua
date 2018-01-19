@@ -26,7 +26,7 @@ function register:update(dt)
   self:handleMouse(dt)
   
   if client ~= nil then
-    client:update(dt)
+    client:update_menu(dt)
   end
   
   if fields.password:getvalue() == fields.confirmPassword:getvalue() and string.gsub(fields.password:getvalue(), " ", "") ~= "" and fields.password:getvalue() ~= fields.password.default_text then

@@ -5,13 +5,18 @@ local fields = {}
 local labels = {}
 
 function client_menu:init()
-  
+  buttons.joinGame = Button(.5, 5/8, 1/8, 1/12, "Join Zone")
+  buttons.joinGame.action = self.joinGame
 end
 
 function client_menu:update(dt)
   self:handleMouse(dt)
   
-  client:update(dt)
+  client:update_menu(dt)
+  
+  if client.activeZone.isConnected == true then
+    Gamestate.switch(game)
+  end
 end
 
 function client_menu:draw()
@@ -35,8 +40,11 @@ function client_menu:keypressed(key)
   end
 end
 
-function client_menu:mousepressed(x,y,button)
-  
+function client_menu:mousepressed(mousex,mousey,mouseButton)
+  for i, button in pairs(buttons) do
+    button:highlight(mousePos)
+    button:mousepressed(mouseButton)
+  end
 end
 
 function client_menu:quit()
@@ -71,4 +79,8 @@ function client_menu:handleMouse(dt)
   else
     love.mouse.setCursor()
   end
+end
+
+function client_menu:joinGame()
+  client:joinZone()
 end

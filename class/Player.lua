@@ -22,10 +22,10 @@ Player = Class{
     self.dx = 0
     self.dy = 0
     if love.keyboard.isDown("w") then
-      self.dy = self.dy + 1
+      self.dy = self.dy - 1
     end
     if love.keyboard.isDown("s") then
-      self.dy = self.dy - 1
+      self.dy = self.dy + 1
     end
     if love.keyboard.isDown("a") then
       self.dx = self.dx - 1
@@ -38,5 +38,16 @@ Player = Class{
     self.velocity:trimInplace(self.speed)
     self.pos = self.pos + self.velocity
     self.mask:moveTo(self.pos:unpack())
+  end;
+  
+  updateExt = function(self, x, y, dir)
+    self.pos.x = x
+    self.pos.y = y
+    self.dir = dir
+    self.mask:moveTo(self.pos:unpack())
+  end;
+  
+  getUpdate = function(self)
+    return self.pos.x, self.pos.y, self.dir, self.player_id
   end;
 }
