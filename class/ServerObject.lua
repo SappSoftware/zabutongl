@@ -8,7 +8,7 @@ ServerObject = Class{
     self:setCallbacks()
     self.playerList = {}
     self.fullPlayerList = playerListData
-    self.activeZone = Zone(-5000, 5000, 5000, -5000)
+    self.activeZone = Zone(-500, 500, 500, -500)
   end;
   
   setCallbacks = function(self)

@@ -12,6 +12,7 @@ function game:init()
   camera = Camera(0, 0)
   
   ui_square = HC.rectangle(0, SW, SW, SH-SW)
+  labels.coord = Label("(" .. client.player.pos.x .. ", " .. client.player.pos.y .. ")", .1, .1, "left", CLR.BLACK)
 end
 
 function game:enter(from)
@@ -27,6 +28,8 @@ function game:update(dt)
   client:update_game(dt)
   
   camera:lookAt(client.player.pos:unpack())
+  
+  labels.coord:settext("(" .. client.player.pos.x .. ", " .. client.player.pos.y .. ")")
 end
 
 function game:keypressed(key)

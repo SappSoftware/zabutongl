@@ -3,7 +3,7 @@ Zone = Class{
     self.players = {}
     self.npcs = {}
     self.boundaries = {left = left, right = right, up = up, down = down}
-    self.boundaryLines = {self.boundaries.left, self.boundaries.up, self.boundaries.right, self.boundaries.up, self.boundaries.right, self.boundaries.down, self.boundaries.left, self.boundaries.down}
+    self.boundaryLines = {self.boundaries.left, self.boundaries.up, self.boundaries.right, self.boundaries.up, self.boundaries.right, self.boundaries.down, self.boundaries.left, self.boundaries.down, self.boundaries.left, self.boundaries.up}
     self.isConnected = true
   end;
   

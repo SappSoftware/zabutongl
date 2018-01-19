@@ -52,6 +52,7 @@ ClientObject = Class{
     
     self.sender:on("joinZone", function(data)
       self.activeZone = Zone(data.left, data.right, data.up, data.down)
+      self.activeZone:addPlayer(self.player, self.sender:getIndex())
     end)  
   end;
   
@@ -81,7 +82,7 @@ ClientObject = Class{
     end
   end;
   
-  draw= function(self)
+  draw = function(self)
     love.graphics.print(self.sender:getState(), 5, 5)
   end;
   
