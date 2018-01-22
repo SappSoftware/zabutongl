@@ -41,5 +41,9 @@ Zone = Class{
   addPlayer = function(self, player, index)
     table.insert(self.players, index, player)
   end;
+  
+  removePlayer = function(self, index)
+    table.remove(self.players, index)
+  end;
 }
 

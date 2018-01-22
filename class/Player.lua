@@ -44,13 +44,27 @@ Player = Class{
       self.mask:moveTo(nextpos:unpack())
       
       if self.parentZone ~= false then
+        local diff = Vector(0,0)
         for i, object in ipairs(self.parentZone.masks) do
           local test, dx, dy = self.mask:collidesWith(object)
+          --attempt saving all collisions, resolve as a whole rather than in order
           if test == true then
-            local diff = Vector(dx, dy)
+            --[[
+            local tempdiff = Vector(dx, dy)
+            if tempdiff.x * tempdiff.x > diff.x * diff.x then
+              diff.x = tempdiff.x
+            end
+            if tempdiff.y * tempdiff.y > diff.y * diff.y then
+              diff.y = tempdiff.y
+            end
+            ]]--
+            diff = Vector(dx,dy)
             nextpos = nextpos + diff
+            self.mask:moveTo(nextpos:unpack())
           end
         end
+        --nextpos = nextpos + diff
+        
       end
       
       self.pos = nextpos

@@ -8,7 +8,7 @@ ServerObject = Class{
     self:setCallbacks()
     self.playerList = {}
     self.fullPlayerList = playerListData
-    self.activeZone = Zone(1)
+    self.activeZone = Zone(2)
   end;
   
   setCallbacks = function(self)
@@ -30,7 +30,8 @@ ServerObject = Class{
     
     self.sender:on("disconnect", function(data, client)
       local index = client:getIndex()
-      if data == 0 then
+      if data == 1 then
+        self.activeZone:removePlayer(index)
         self.playerList[index] = nil
       end
     end)

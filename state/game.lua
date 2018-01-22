@@ -126,4 +126,7 @@ function game:handleMouse()
 end
 
 function game:quit()
+  if client ~= nil then
+    client.sender:disconnectNow(1)
+  end
 end

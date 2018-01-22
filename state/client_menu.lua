@@ -49,7 +49,7 @@ end
 
 function client_menu:quit()
   if client ~= nil then
-    client.sender:disconnectNow()
+    client.sender:disconnectNow(1)
   end
 end
 
