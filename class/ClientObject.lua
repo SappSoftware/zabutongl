@@ -51,7 +51,8 @@ ClientObject = Class{
     end)
     
     self.sender:on("joinZone", function(data)
-      self.activeZone = Zone(data.left, data.right, data.up, data.down)
+      self.activeZone = Zone(data)
+      self.player.parentZone = self.activeZone
       self.activeZone:addPlayer(self.player, self.sender:getIndex())
     end)  
   end;

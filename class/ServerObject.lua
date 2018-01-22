@@ -8,7 +8,7 @@ ServerObject = Class{
     self:setCallbacks()
     self.playerList = {}
     self.fullPlayerList = playerListData
-    self.activeZone = Zone(-500, 500, 500, -500)
+    self.activeZone = Zone(1)
   end;
   
   setCallbacks = function(self)
@@ -70,7 +70,7 @@ ServerObject = Class{
       local index = client:getIndex()
       local player_id = data
       self.activeZone:addPlayer(Player(player_id), index)
-      client:send("joinZone", self.activeZone.boundaries)
+      client:send("joinZone", self.activeZone.zone_id)
     end)
     
     self.sender:on("updatePlayer", function(data, client)

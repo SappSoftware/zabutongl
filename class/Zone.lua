@@ -1,15 +1,27 @@
 Zone = Class{
-  init = function(self, left, right, up, down)
+  init = function(self, zone_id)
     self.players = {}
     self.npcs = {}
-    self.boundaries = {left = left, right = right, up = up, down = down}
-    self.boundaryLines = {self.boundaries.left, self.boundaries.up, self.boundaries.right, self.boundaries.up, self.boundaries.right, self.boundaries.down, self.boundaries.left, self.boundaries.down, self.boundaries.left, self.boundaries.up}
+    self.zone_id = zone_id
+    self.masks = self:initializeMasks(zone_id)
     self.isConnected = true
+  end;
+  
+  initializeMasks = function(self, zone_id)
+    local masks = {}
+    for i, data in ipairs(ZONES[zone_id].masks) do
+      local box = HC.rectangle(data.x, data.y, data.w, data.h)
+      table.insert(masks, box)
+    end
+    return masks
   end;
   
   draw = function(self)
     love.graphics.setColor(CLR.RED)
-    love.graphics.line(self.boundaryLines)
+    
+    for i, mask in ipairs(self.masks) do
+      mask:draw("line")
+    end
     for i, player in pairs(self.players) do
       player:draw()
     end

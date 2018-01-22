@@ -32,6 +32,8 @@ require "state/login"
 require "state/register"
 require "state/game"
 
+require "zones/zone1"
+
 sprites = {}
 
 SW = love.graphics.getWidth()
@@ -39,15 +41,18 @@ SH = love.graphics.getHeight()
 
 CUR = {}
 
+ZONES = {}
+
 FONT_SIZE = 24
 
 mousePos = {}
 
-ipAddress = "10.246.205.96"
+ipAddress = "10.246.2.249"
 
 function love.load(arg)
   if debug then require("mobdebug").start() end
   fpsCounter = Label("FPS", .015, .03, "left", CLR.WHITE)
+  ZONES = loadZones()
   Gamestate.registerEvents()
   love.keyboard.setKeyRepeat(true)
   love.graphics.setFont(love.graphics.newFont(math.floor(SH/64)))
@@ -77,6 +82,13 @@ end
 
 function love.keypressed(key)
 
+end
+
+function loadZones()
+  local zones = {}
+  zones[1] = zone1
+  
+  return zones
 end
 
 function loadImages()
