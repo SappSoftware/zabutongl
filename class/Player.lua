@@ -37,34 +37,79 @@ Player = Class{
     self.velocity.x = self.dx*self.speed
     self.velocity.y = self.dy*self.speed
     self.velocity:trimInplace(self.speed)
+    local nextpos = Vector(0,0)
     if self.velocity:len2() ~= 0 then
-      local nextpos = Vector(0,0)
       nextpos = self.pos + self.velocity
       
       self.mask:moveTo(nextpos:unpack())
       
       if self.parentZone ~= false then
         local diff = Vector(0,0)
+        local collides = {}
+        local collisionResolved = true
         for i, object in ipairs(self.parentZone.masks) do
           local test, dx, dy = self.mask:collidesWith(object)
           --attempt saving all collisions, resolve as a whole rather than in order
           if test == true then
-            --[[
-            local tempdiff = Vector(dx, dy)
-            if tempdiff.x * tempdiff.x > diff.x * diff.x then
-              diff.x = tempdiff.x
-            end
-            if tempdiff.y * tempdiff.y > diff.y * diff.y then
-              diff.y = tempdiff.y
-            end
-            ]]--
+            --collisionResolved = false
+            table.insert(collides, {dx = dx, dy = dy, mask = object})
+
             diff = Vector(dx,dy)
             nextpos = nextpos + diff
             self.mask:moveTo(nextpos:unpack())
+
           end
         end
-        --nextpos = nextpos + diff
-        
+        if #collides == 2 then
+          local a = ""
+        end
+        --[[
+        if #collides > 1 then
+          local numIters = 0
+          while collisionResolved == false do
+            numIters = numIters + 1
+            local noneWorked = true
+            for i, object in ipairs(collides) do
+              local isGoodPush = true
+              local testdiff = Vector(object.dx, object.dy)
+              local testpos = nextpos + testdiff
+              self.mask:moveTo(testpos:unpack())
+              for j, subject in ipairs(collides) do
+                local isCollide = self.mask:collidesWith(subject.mask)
+                if isCollide == true then
+                  isGoodPush = false
+                  break
+                end
+              end
+              if isGoodPush == true then
+                collisionResolved = true
+                noneWorked = false
+                nextpos = testpos
+                break 
+              end
+            end
+            if noneWorked == true then
+              for i, object in ipairs(collides) do
+                local test, dx, dy = self.mask:collidesWith(object.mask)
+                if test then
+                  local diff = Vector(dx,dy)
+                  nextpos = nextpos + diff
+                  self.mask:moveTo(nextpos:unpack())
+                end
+              end
+              collisionResolved = true
+            end
+            if numIters > 10 then 
+              nextpos = self.pos
+              break
+            end
+          end
+        elseif #collides == 1 then
+          local diff = Vector(collides[1].dx,collides[1].dy)
+          nextpos = nextpos + diff
+          self.mask:moveTo(nextpos:unpack())
+        end
+        ]]--
       end
       
       self.pos = nextpos

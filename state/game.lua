@@ -7,6 +7,7 @@ local labels = {}
 local ui_square = {}
 
 local camera = {}
+local zoom = 1
 
 function game:init()
   camera = Camera(0, 0)
@@ -35,6 +36,16 @@ end
 function game:keypressed(key)
   for pos, field in pairs(fields) do
     field:keypressed(key)
+  end
+  
+  if key == "-" then
+    zoom = zoom - .1
+    camera:zoomTo(zoom)
+  end
+  
+  if key == "=" then
+    zoom = zoom + .1
+    camera:zoomTo(zoom)
   end
   
   if key == "escape" then

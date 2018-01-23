@@ -11,6 +11,9 @@ Zone = Class{
     local masks = {}
     for i, data in ipairs(ZONES[zone_id].masks) do
       local box = HC.rectangle(data.x, data.y, data.w, data.h)
+      if data.rot ~= nil then
+        box:setRotation(data.rot*math.pi/180)
+      end
       table.insert(masks, box)
     end
     return masks
