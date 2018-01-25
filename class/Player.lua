@@ -53,16 +53,23 @@ Player = Class{
           if test == true then
             --collisionResolved = false
             table.insert(collides, {dx = dx, dy = dy, mask = object})
-
+--[[
             diff = Vector(dx,dy)
             nextpos = nextpos + diff
             self.mask:moveTo(nextpos:unpack())
-
+]]--
           end
         end
         if #collides == 2 then
           local a = ""
         end
+        
+          for i, object in ipairs(collides) do
+            diff = Vector(object.dx,object.dy)
+            nextpos = nextpos + diff
+            self.mask:moveTo(nextpos:unpack())
+          end
+        --end
         --[[
         if #collides > 1 then
           local numIters = 0
