@@ -34,6 +34,11 @@ Player = Class{
     if love.keyboard.isDown("d") then
       self.dx = self.dx + 1
     end
+    if love.keyboard.isDown("t") then
+      self.speed = 0.1
+    else
+      self.speed = 20
+    end
     self.velocity.x = self.dx*self.speed
     self.velocity.y = self.dy*self.speed
     self.velocity:trimInplace(self.speed)
@@ -51,7 +56,7 @@ Player = Class{
           local test, dx, dy = self.mask:collidesWith(object)
           --attempt saving all collisions, resolve as a whole rather than in order
           if test == true then
-            --collisionResolved = false
+            collisionResolved = false
             table.insert(collides, {dx = dx, dy = dy, mask = object})
 --[[
             diff = Vector(dx,dy)
@@ -60,15 +65,55 @@ Player = Class{
 ]]--
           end
         end
-        if #collides == 2 then
-          local a = ""
+        if #collides == 1 then
+          diff = Vector(collides[1].dx,collides[1].dy)
+          nextpos = nextpos + diff
+        elseif #collides == 2 then
+          local vectorA = Vector(collides[1].dx, collides[1].dy)
+          local vectorB = Vector(collides[2].dx, collides[2].dy)
+          local theta = math.abs(vectorA:angleTo(vectorB))
+          if theta > math.pi then
+            theta = theta / math.pi
+          end
+          
+          if theta < 0.01 then
+            diff = vectorA
+            nextpos = nextpos + diff
+          elseif theta > math.pi/2 + 0.01 then
+            local testpos = nextpos
+            local numCollides = #collides
+            while collisionResolved == false do
+              if numCollides == 0 then
+                collisionResolved = true
+              else
+                testpos = testpos - 0.1*self.velocity
+                self.mask:moveTo(testpos:unpack())
+                numCollides = #collides
+                for i, object in ipairs(collides) do
+                  local test, dx, dy = self.mask:collidesWith(object.mask)
+                  if test == false then
+                    numCollides = numCollides - 1
+                  end
+                end
+              end
+            end
+            nextpos = testpos
+          elseif theta < math.pi/2 - .01 then
+            if vectorA:len2() > vectorB:len2() then
+              diff = vectorA
+            else
+              diff = vectorB
+            end
+            nextpos = nextpos + diff
+          elseif theta < math.pi/2 + .01 then
+            diff = vectorA + vectorB
+            nextpos = nextpos + diff
+          else
+            nextpos = self.pos
+          end
         end
         
-          for i, object in ipairs(collides) do
-            diff = Vector(object.dx,object.dy)
-            nextpos = nextpos + diff
-            self.mask:moveTo(nextpos:unpack())
-          end
+        local a = ""
         --end
         --[[
         if #collides > 1 then
