@@ -74,7 +74,7 @@ ClientObject = Class{
       self.sender:update(self.tick)
       
       if self.activeZone ~= {} then
-        self.player:update(dt)
+        self.player:update(self.tick)
         
         local data = {self.player:getUpdate()}
         self.sender:send("updatePlayer", data)

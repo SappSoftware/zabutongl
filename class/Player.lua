@@ -5,7 +5,7 @@ Player = Class{
     self.dx = 0
     self.dy = 0
     self.radius = 50
-    self.speed = 20
+    self.speed = 150
     self.velocity = Vector(0,0)
     self.dir = 0
     self.mask = HC.circle(self.pos.x, self.pos.y, self.radius)
@@ -35,13 +35,13 @@ Player = Class{
       self.dx = self.dx + 1
     end
     if love.keyboard.isDown("t") then
-      self.speed = 0.1
+      self.speed = 10
     else
-      self.speed = 20
+      self.speed = 150
     end
     self.velocity.x = self.dx*self.speed
     self.velocity.y = self.dy*self.speed
-    self.velocity:trimInplace(self.speed)
+    self.velocity:trimInplace(self.speed*dt)
     local nextpos = Vector(0,0)
     if self.velocity:len2() ~= 0 then
       nextpos = self.pos + self.velocity
@@ -65,6 +65,7 @@ Player = Class{
 ]]--
           end
         end
+        -------------------------TEST TWO----------------------------------
         if #collides == 1 then
           diff = Vector(collides[1].dx,collides[1].dy)
           nextpos = nextpos + diff
@@ -73,11 +74,15 @@ Player = Class{
           local vectorB = Vector(collides[2].dx, collides[2].dy)
           local theta = math.abs(vectorA:angleTo(vectorB))
           if theta > math.pi then
-            theta = theta / math.pi
+            theta = theta - math.pi
           end
           
           if theta < 0.01 then
-            diff = vectorA
+            if vectorA:len2() > vectorB:len2() then
+              diff = vectorA
+            else
+              diff = vectorB
+            end
             nextpos = nextpos + diff
           elseif theta > math.pi/2 + 0.01 then
             local testpos = nextpos
@@ -112,9 +117,11 @@ Player = Class{
             nextpos = self.pos
           end
         end
+        -------------------------TEST TWO----------------------------------
         
         local a = ""
         --end
+        -------------------------TEST ONE----------------------------------
         --[[
         if #collides > 1 then
           local numIters = 0
@@ -162,6 +169,7 @@ Player = Class{
           self.mask:moveTo(nextpos:unpack())
         end
         ]]--
+        -------------------------TEST ONE----------------------------------
       end
       
       self.pos = nextpos
