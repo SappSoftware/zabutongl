@@ -53,13 +53,13 @@ Player = Class{
         local collides = {}
         local collisionResolved = true
         for i, object in ipairs(self.parentZone.masks) do
-          local test, dx, dy = self.mask:collidesWith(object)
+          local test, dx, dy = self.mask:collidesWith(object.mask)
           --attempt saving all collisions, resolve as a whole rather than in order
           if test == true then
             collisionResolved = false
             local shunt = Vector(dx,dy)
             local length = shunt:len2()
-            table.insert(collides, {dx = dx, dy = dy, shunt = shunt, length = length, mask = object})
+            table.insert(collides, {dx = dx, dy = dy, shunt = shunt, length = length, object = object})
             --[[
             diff = Vector(dx,dy)
             nextpos = nextpos + diff
@@ -85,7 +85,7 @@ Player = Class{
           local perp = collision.shunt:perpendicular()
           self.mask:moveTo(finalpos:unpack())
           for j, comparison in ipairs(testCases) do
-            local test, dx, dy = self.mask:collidesWith(comparison.mask)
+            local test, dx, dy = self.mask:collidesWith(comparison.object.mask)
             if test == true then
               local shunt = Vector(dx,dy)
               local slide = shunt:projectOn(perp)

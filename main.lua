@@ -25,6 +25,7 @@ require "class/FillableField"
 require "class/Label"
 require "class/Zone"
 require "class/Player"
+require "class/RectMask"
 
 require "state/server_menu"
 require "state/client_menu"
