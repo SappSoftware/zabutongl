@@ -57,15 +57,52 @@ Player = Class{
           --attempt saving all collisions, resolve as a whole rather than in order
           if test == true then
             collisionResolved = false
-            table.insert(collides, {dx = dx, dy = dy, mask = object})
---[[
+            local shunt = Vector(dx,dy)
+            local length = shunt:len2()
+            table.insert(collides, {dx = dx, dy = dy, shunt = shunt, length = length, mask = object})
+            --[[
             diff = Vector(dx,dy)
             nextpos = nextpos + diff
             self.mask:moveTo(nextpos:unpack())
-]]--
+            ]]--
           end
         end
-        -------------------------TEST TWO----------------------------------
+        ------------------------METHOD THREE---------------------------------
+        local testCases = {}
+        for i, collision in ipairs(collides) do
+          local index = 1
+          for j, comparison in ipairs(collides) do
+            if collision.length > comparison.length then
+              index = index + 1
+            end
+          end
+          testCases[index] = collision
+        end
+        
+        for i, collision in ipairs(testCases) do
+          local numCollisions = #testCases
+          local finalpos = nextpos + collision.shunt
+          local perp = collision.shunt:perpendicular()
+          self.mask:moveTo(finalpos:unpack())
+          for j, comparison in ipairs(testCases) do
+            local test, dx, dy = self.mask:collidesWith(comparison.mask)
+            if test == true then
+              local shunt = Vector(dx,dy)
+              local slide = shunt:projectOn(perp)
+              finalpos = finalpos + slide
+              numCollisions = numCollisions - 1
+            else
+              numCollisions = numCollisions - 1
+            end
+          end
+          if numCollisions == 0 then
+            nextpos = finalpos
+            break
+          end
+        end
+        ------------------------METHOD THREE---------------------------------
+        -------------------------METHOD TWO----------------------------------
+        --[[
         if #collides == 1 then
           diff = Vector(collides[1].dx,collides[1].dy)
           nextpos = nextpos + diff
@@ -117,11 +154,9 @@ Player = Class{
             nextpos = self.pos
           end
         end
-        -------------------------TEST TWO----------------------------------
-        
-        local a = ""
-        --end
-        -------------------------TEST ONE----------------------------------
+        -------------------------METHOD TWO----------------------------------
+        ]]--
+        -------------------------METHOD ONE----------------------------------
         --[[
         if #collides > 1 then
           local numIters = 0
@@ -168,8 +203,8 @@ Player = Class{
           nextpos = nextpos + diff
           self.mask:moveTo(nextpos:unpack())
         end
+        -------------------------METHOD ONE----------------------------------
         ]]--
-        -------------------------TEST ONE----------------------------------
       end
       
       self.pos = nextpos
