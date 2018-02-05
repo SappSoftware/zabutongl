@@ -14,8 +14,9 @@ RectMask = Class{
   getNormals = function(self)
     local normals = {}
     local unit = Vector(1,0)
-    for i = 0, 3 do
-      table.insert(normals, unit:rotated(self.rotrad + i*math.pi/2))
+    table.insert(normals, unit:rotated(self.rotrad))
+    for i = 2,4 do
+      table.insert(normals, normals[i-1]:perpendicular())
     end
     return normals
   end;

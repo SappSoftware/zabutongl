@@ -57,9 +57,18 @@ Player = Class{
           --attempt saving all collisions, resolve as a whole rather than in order
           if test == true then
             collisionResolved = false
+            
             local shunt = Vector(dx,dy)
             local length = shunt:len2()
-            table.insert(collides, {dx = dx, dy = dy, shunt = shunt, length = length, object = object})
+            local norm1 = shunt*object.normals[1]
+            local norm2 = shunt*object.normals[2]
+            local perp = Vector(0,0)
+            if norm1 < norm2 then
+              perp = object.normals[1]
+            else
+              perp = object.normals[2]
+            end
+            table.insert(collides, {perp = perp, shunt = shunt, length = length, object = object})
             --[[
             diff = Vector(dx,dy)
             nextpos = nextpos + diff
@@ -82,13 +91,13 @@ Player = Class{
         for i, collision in ipairs(testCases) do
           local numCollisions = #testCases
           local finalpos = nextpos + collision.shunt
-          local perp = collision.shunt:perpendicular()
+          
           self.mask:moveTo(finalpos:unpack())
           for j, comparison in ipairs(testCases) do
             local test, dx, dy = self.mask:collidesWith(comparison.object.mask)
             if test == true then
               local shunt = Vector(dx,dy)
-              local slide = shunt:projectOn(perp)
+              local slide = shunt:projectOn(collision.perp)
               finalpos = finalpos + slide
               numCollisions = numCollisions - 1
             else
