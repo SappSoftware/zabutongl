@@ -5,7 +5,7 @@ Player = Class{
     self.dx = 0
     self.dy = 0
     self.radius = 50
-    self.speed = 150
+    self.speed = 300
     self.velocity = Vector(0,0)
     self.dir = 0
     self.mask = HC.circle(self.pos.x, self.pos.y, self.radius)
@@ -60,10 +60,10 @@ Player = Class{
             
             local shunt = Vector(dx,dy)
             local length = shunt:len2()
-            local norm1 = shunt*object.normals[1]
-            local norm2 = shunt*object.normals[2]
+            local norm1 = math.abs(shunt*object.normals[1])
+            local norm2 = math.abs(shunt*object.normals[2])
             local perp = Vector(0,0)
-            if norm1 < norm2 then
+            if norm1 > norm2 then
               perp = object.normals[1]
             else
               perp = object.normals[2]
@@ -76,7 +76,21 @@ Player = Class{
             ]]--
           end
         end
+        
+        ------------------------METHOD FOUR----------------------------------
+        for i = 1, 3 do
+          for i, collision in ipairs(collides) do
+            local test, dx, dy = self.mask:collidesWith(collision.object.mask)
+            if test == true then
+              local shunt = Vector(dx,dy)
+              nextpos = nextpos + shunt
+            end
+            self.mask:moveTo(nextpos:unpack())
+          end
+        end
+        ------------------------METHOD FOUR----------------------------------
         ------------------------METHOD THREE---------------------------------
+        --[[
         local testCases = {}
         for i, collision in ipairs(collides) do
           local index = 1
@@ -110,6 +124,7 @@ Player = Class{
           end
         end
         ------------------------METHOD THREE---------------------------------
+        ]]--
         -------------------------METHOD TWO----------------------------------
         --[[
         if #collides == 1 then
