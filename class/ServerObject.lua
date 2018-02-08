@@ -8,7 +8,7 @@ ServerObject = Class{
     self:setCallbacks()
     self.playerList = {}
     self.fullPlayerList = playerListData
-    self.activeZone = Zone(1)
+    self.activeZone = Zone(1, {})
   end;
   
   setCallbacks = function(self)
@@ -30,10 +30,8 @@ ServerObject = Class{
     
     self.sender:on("disconnect", function(data, client)
       local index = client:getIndex()
-      if data == 1 then
-        self.activeZone:removePlayer(index)
-        self.playerList[index] = nil
-      end
+      self.activeZone:removePlayer(index)
+      self.playerList[index] = nil
     end)
     
     self.sender:on("register", function(data, client)
@@ -71,12 +69,13 @@ ServerObject = Class{
       local index = client:getIndex()
       local player_id = data
       self.activeZone:addPlayer(Player(player_id), index)
-      client:send("joinZone", self.activeZone.zone_id)
+      local sendData = {zone_id = self.activeZone.zone_id, players_data = self.activeZone.players_data}
+      client:send("joinZone", sendData)
     end)
     
     self.sender:on("updatePlayer", function(data, client)
       local index = client:getIndex()
-      self.activeZone:updatePlayer(data, index)
+      self.activeZone.players_data[index] = data
     end)
   end;
   
@@ -85,6 +84,11 @@ ServerObject = Class{
     
     if self.tick >= self.tickRate then
       self.sender:update(self.tick)
+      
+      self.activeZone:update(self.tick)
+      
+      self.sender:sendToAll("updatePlayers", self.activeZone.players_data)
+      
       self.tick = 0
     end
   end;

@@ -1,13 +1,13 @@
 Player = Class{
-  init = function(self, player_id, parentZone)
+  init = function(self, player_id, parentZone, x, y, dir)
     self.player_id = player_id
-    self.pos = Vector(0, 0)
+    self.pos = Vector(x or 0, y or 0)
     self.dx = 0
     self.dy = 0
     self.radius = 50
     self.speed = 300
     self.velocity = Vector(0,0)
-    self.dir = 0
+    self.dir = dir or 0
     self.mask = HC.circle(self.pos.x, self.pos.y, self.radius)
     self.parentZone = parentZone or false
   end;
@@ -34,11 +34,6 @@ Player = Class{
     if love.keyboard.isDown("d") then
       self.dx = self.dx + 1
     end
-    if love.keyboard.isDown("t") then
-      self.speed = 10
-    else
-      self.speed = 150
-    end
     self.velocity.x = self.dx*self.speed
     self.velocity.y = self.dy*self.speed
     self.velocity:trimInplace(self.speed*dt)
@@ -60,26 +55,24 @@ Player = Class{
             
             local shunt = Vector(dx,dy)
             local length = shunt:len2()
-            local norm1 = math.abs(shunt*object.normals[1])
-            local norm2 = math.abs(shunt*object.normals[2])
-            local perp = Vector(0,0)
-            if norm1 > norm2 then
-              perp = object.normals[1]
-            else
-              perp = object.normals[2]
-            end
-            table.insert(collides, {perp = perp, shunt = shunt, length = length, object = object})
-            --[[
-            diff = Vector(dx,dy)
-            nextpos = nextpos + diff
-            self.mask:moveTo(nextpos:unpack())
-            ]]--
+            table.insert(collides, {shunt = shunt, length = length, object = object})
           end
         end
         
         ------------------------METHOD FOUR----------------------------------
+        local testCases = {}
+        for i, collision in ipairs(collides) do
+          local index = 1
+          for j, comparison in ipairs(collides) do
+            if collision.length < comparison.length then
+              index = index + 1
+            end
+          end
+          testCases[index] = collision
+        end
+        
         for i = 1, 3 do
-          for i, collision in ipairs(collides) do
+          for i, collision in ipairs(testCases) do
             local test, dx, dy = self.mask:collidesWith(collision.object.mask)
             if test == true then
               local shunt = Vector(dx,dy)

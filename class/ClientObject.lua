@@ -10,7 +10,7 @@ ClientObject = Class{
     self:setCallbacks()
     self.sender:connect()
     self.activeZone = {}
-    self.player = Player(self.user_data.username)
+    self.player = {}
   end;
   
   setCallbacks = function(self)
@@ -51,10 +51,18 @@ ClientObject = Class{
     end)
     
     self.sender:on("joinZone", function(data)
-      self.activeZone = Zone(data)
-      self.player.parentZone = self.activeZone
-      self.activeZone:addPlayer(self.player, self.sender:getIndex())
-    end)  
+      self.activeZone = Zone(data.zone_id, data.players_data)
+      self.player = self.activeZone.players[self.sender:getIndex()]
+    end)
+    --[[
+    self.sender:on("playerJoined", function(data)
+    local newPlayer = Player(data.username)
+    self.activeZone:addPlayer(self.player, self.sender:getIndex())
+    end)
+    ]]--
+    self.sender:on("updatePlayers", function(data)
+      self.activeZone.players_data = data
+    end)
   end;
   
   update_menu = function(self, dt)
@@ -76,6 +84,8 @@ ClientObject = Class{
       if self.activeZone ~= {} then
         self.player:update(self.tick)
         
+        self.activeZone:update(self.tick, self.sender:getIndex())
+        
         local data = {self.player:getUpdate()}
         self.sender:send("updatePlayer", data)
       end
@@ -88,6 +98,6 @@ ClientObject = Class{
   end;
   
   joinZone = function(self)
-    self.sender:send("joinZone", self.player.player_id)
+    self.sender:send("joinZone", self.user_data.username)
   end;
   }
