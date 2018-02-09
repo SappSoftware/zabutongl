@@ -5,6 +5,9 @@ local user_data = {}
 local fields = {}
 local buttons = {}
 local labels = {}
+local testmouseslow = {}
+local testmousefast = {}
+local test = {}
 
 function login:init()
   mousePos = HC.point(love.mouse.getX(), love.mouse.getY())
@@ -19,7 +22,16 @@ function login:init()
   fields.ip = FillableField(.5, .1, 1/8, 1/20, ipAddress, false)
 end
 
+function login:enter(from)
+  mousePos = HC.point(love.mouse.getX(), love.mouse.getY())
+  test = mousePos:center()
+  testmouseslow = HC.circle(0,0, 30)
+  testmousefast = HC.circle(0,0, 30)
+end
+
 function login:update(dt)
+  
+  TICK = TICK + dt
   self:handleMouse(dt)
   
   if client ~= nil then
@@ -34,16 +46,33 @@ function login:update(dt)
     field:update(dt)
   end
   
-  if fields.username:getvalue() ~= fields.username.default_text and string.gsub(fields.username:getvalue(), " ", "") ~= "" 
-  and fields.password:getvalue() ~= fields.password.default_text and string.gsub(fields.password:getvalue(), " ", "") ~= "" then
-    buttons.login.isSelectable = true
-  else
-    buttons.login.isSelectable = false
+  if TICK >= FPS then
+    testmouseslow:moveTo(x,y)
+    if client ~= nil then
+      client:update(dt)
+    end
+    
+    for _, field in pairs(fields) do
+      field:update(TICK)
+    end
+    
+    if fields.username:getvalue() ~= fields.username.default_text and string.gsub(fields.username:getvalue(), " ", "") ~= "" 
+    and fields.password:getvalue() ~= fields.password.default_text and string.gsub(fields.password:getvalue(), " ", "") ~= "" then
+      buttons.login.isSelectable = true
+    else
+      buttons.login.isSelectable = false
+    end
+    TICK = 0
   end
 end
 
 function login:draw()
   drawFPS(fpsCounter)
+  love.graphics.print(tostring(test), 50, 100)
+  love.graphics.setColor(CLR.BLUE)
+  testmouseslow:draw('fill')
+  love.graphics.setColor(CLR.RED)
+  testmousefast:draw('fill')
   if client ~= nil then
     client:draw()
   end

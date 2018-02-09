@@ -1,4 +1,4 @@
-debug = false
+debug = true
 
 isServer = false
 
@@ -43,21 +43,21 @@ SH = love.graphics.getHeight()
 
 CUR = {}
 
-ZONES = {}
-
-FONT_SIZE = 24
+FNT = {}
 
 mousePos = {}
 
-ipAddress = "10.246.2.249"
+TICK = 0
+FPS = 1/60
+
+ipAddress = "10.246.205.96"
 
 function love.load(arg)
   if debug then require("mobdebug").start() end
-  fpsCounter = Label("FPS", .015, .03, "left", CLR.WHITE)
-  ZONES = loadZones()
   Gamestate.registerEvents()
   love.keyboard.setKeyRepeat(true)
-  love.graphics.setFont(love.graphics.newFont(math.floor(SH/64)))
+  FNT.DEFAULT = love.graphics.newFont(math.floor(SH/64))
+  love.graphics.setFont(FNT.DEFAULT)
   love.graphics.setBackgroundColor(CLR.BLACK)
   CUR.H = love.mouse.getSystemCursor("hand")
   CUR.I = love.mouse.getSystemCursor("ibeam")
@@ -65,6 +65,7 @@ function love.load(arg)
   --timeTest2()
   --timeTest3()
   loadImages()
+  fpsCounter = Label("FPS", .015, .03, "left", CLR.WHITE)
   if isServer then
     server_data = loadServerData()
     Gamestate.switch(server_menu)
