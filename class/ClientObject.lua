@@ -52,14 +52,9 @@ ClientObject = Class{
     
     self.sender:on("joinZone", function(data)
       self.activeZone = Zone(data.zone_id, data.players_data)
-      self.player = self.activeZone.players[self.sender:getIndex()]
+      self.player = self.activeZone.players[self.user_data.username]
     end)
-    --[[
-    self.sender:on("playerJoined", function(data)
-    local newPlayer = Player(data.username)
-    self.activeZone:addPlayer(self.player, self.sender:getIndex())
-    end)
-    ]]--
+    
     self.sender:on("updatePlayers", function(data)
       self.activeZone.players_data = data
     end)
@@ -84,7 +79,7 @@ ClientObject = Class{
       if self.activeZone ~= {} then
         self.player:update(self.tick)
         
-        self.activeZone:update(self.tick, self.sender:getIndex())
+        self.activeZone:update(self.tick, self.user_data.username)
         
         local data = {self.player:getUpdate()}
         self.sender:send("updatePlayer", data)

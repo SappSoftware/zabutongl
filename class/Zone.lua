@@ -11,7 +11,7 @@ Zone = Class{
   initializePlayers = function(self)
     local returnTable = {}
     for index, player_data in pairs(self.players_data) do
-      table.insert(returnTable, index, Player(player_data.player_id, self, player_data.x, player_data.y, player_data.dir))
+      returnTable[index] = Player(player_data.player_id, self, player_data.x, player_data.y, player_data.dir)
     end
     return returnTable
   end;
@@ -58,17 +58,19 @@ Zone = Class{
   addPlayer = function(self, player, index)
     local data = {x = player.pos.x, y = player.pos.y, dir = player.dir, player_id = player.player_id}
     player.activeZone = self
-    table.insert(self.players_data, index, data)
-    table.insert(self.players, index, player)
+    self.players_data[index] = data
+    self.players[index] = player
   end;
   
   instantiatePlayer = function(self, data, index)
     local player = Player(data.player_id, self, data.x, data.y, data.dir)
-    table.insert(self.players, index, player)
+    self.players[index] = player
   end;
   
   removePlayer = function(self, index)
-    table.remove(self.players, index)
+    if self.players[index] ~= nil then
+      self.players_data[index] = nil
+      self.players[index] = nil
+    end
   end;
 }
-

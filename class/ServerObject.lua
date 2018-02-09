@@ -30,7 +30,7 @@ ServerObject = Class{
     
     self.sender:on("disconnect", function(data, client)
       local index = client:getIndex()
-      self.activeZone:removePlayer(index)
+      self.activeZone:removePlayer(self.playerList[index])
       self.playerList[index] = nil
     end)
     
@@ -66,16 +66,15 @@ ServerObject = Class{
     end)
     
     self.sender:on("joinZone", function(data, client)
-      local index = client:getIndex()
       local player_id = data
-      self.activeZone:addPlayer(Player(player_id), index)
+      self.activeZone:addPlayer(Player(player_id), player_id)
       local sendData = {zone_id = self.activeZone.zone_id, players_data = self.activeZone.players_data}
       client:send("joinZone", sendData)
     end)
     
     self.sender:on("updatePlayer", function(data, client)
       local index = client:getIndex()
-      self.activeZone.players_data[index] = data
+      self.activeZone.players_data[data.player_id] = data
     end)
   end;
   
