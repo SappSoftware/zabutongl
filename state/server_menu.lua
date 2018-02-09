@@ -4,8 +4,13 @@ local buttons = {}
 local fields = {}
 local labels = {}
 
+local isWatching = false
+
+local camera = {}
+
 function server_menu:init()
   server = nil
+  camera = Camera(0, 0)
   mousePos = HC.point(love.mouse.getX(), love.mouse.getY())
   buttons.startServer = Button(1/2, 1/6, 1/8, 1/14, "Start Server")
   buttons.startServer.action = toggleServer
@@ -31,17 +36,25 @@ end
 function server_menu:draw()
   drawFPS(fpsCounter)
   
-  for i, button in pairs(buttons) do
-    button:draw()
+  if isWatching == false then
+    for i, button in pairs(buttons) do
+      button:draw()
+    end
+    
+    for i, field in pairs(fields) do
+      field:draw()
+    end
+    
+    if server ~= nil then
+      server:draw()
+    end
+  else
+    camera:draw(self.draw_game)
   end
-  
-  for i, field in pairs(fields) do
-    field:draw()
-  end
-  
-  if server ~= nil then
-    server:draw()
-  end
+end
+
+function server_menu:draw_game()
+  server.activeZone:draw()
 end
 
 function server_menu:textinput(key)
@@ -55,6 +68,10 @@ end
 function server_menu:keypressed(key)
   for i, field in pairs(fields) do
     field:keypressed(key)
+  end
+  
+  if key == "tab" then
+    isWatching = not isWatching
   end
   
   if key == "escape" then

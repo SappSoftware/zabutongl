@@ -1,15 +1,36 @@
 Zone = Class{
-  init = function(self, left, right, up, down)
-    self.players = {}
+  init = function(self, zone_id, players_data)
+    self.players_data = players_data
+    self.players = self:initializePlayers()
     self.npcs = {}
-    self.boundaries = {left = left, right = right, up = up, down = down}
-    self.boundaryLines = {self.boundaries.left, self.boundaries.up, self.boundaries.right, self.boundaries.up, self.boundaries.right, self.boundaries.down, self.boundaries.left, self.boundaries.down, self.boundaries.left, self.boundaries.up}
+    self.zone_id = zone_id
+    self.masks = self:initializeMasks(zone_id)
     self.isConnected = true
+  end;
+  
+  initializePlayers = function(self)
+    local returnTable = {}
+    for index, player_data in pairs(self.players_data) do
+      returnTable[index] = Player(player_data.player_id, self, player_data.x, player_data.y, player_data.dir)
+    end
+    return returnTable
+  end;
+  
+  initializeMasks = function(self, zone_id)
+    local masks = {}
+    for i, data in ipairs(ZONES[zone_id].masks) do
+      local box = RectMask(data.x, data.y, data.w, data.h, data.rot)
+      table.insert(masks, box)
+    end
+    return masks
   end;
   
   draw = function(self)
     love.graphics.setColor(CLR.RED)
-    love.graphics.line(self.boundaryLines)
+    
+    for i, mask in ipairs(self.masks) do
+      mask:draw("line")
+    end
     for i, player in pairs(self.players) do
       player:draw()
     end
@@ -18,16 +39,38 @@ Zone = Class{
     end
   end;
   
-  update = function(self)
-    
+  update = function(self, dt, player_index)
+    for index, player_data in pairs(self.players_data) do
+      if index ~= player_index then
+        self:updatePlayer(player_data, index)
+      end
+    end
   end;
   
   updatePlayer = function(self, data, index)
-    self.players[index]:updateExt(data.x, data.y, data.dir)
+    if self.players[index] ~= nil then
+      self.players[index]:updateExt(data.x, data.y, data.dir)
+    else
+      self:instantiatePlayer(data, index)
+    end
   end;
   
   addPlayer = function(self, player, index)
-    table.insert(self.players, index, player)
+    local data = {x = player.pos.x, y = player.pos.y, dir = player.dir, player_id = player.player_id}
+    player.activeZone = self
+    self.players_data[index] = data
+    self.players[index] = player
+  end;
+  
+  instantiatePlayer = function(self, data, index)
+    local player = Player(data.player_id, self, data.x, data.y, data.dir)
+    self.players[index] = player
+  end;
+  
+  removePlayer = function(self, index)
+    if self.players[index] ~= nil then
+      self.players_data[index] = nil
+      self.players[index] = nil
+    end
   end;
 }
-

@@ -25,12 +25,16 @@ require "class/FillableField"
 require "class/Label"
 require "class/Zone"
 require "class/Player"
+require "class/RectMask"
 
 require "state/server_menu"
 require "state/client_menu"
 require "state/login"
 require "state/register"
 require "state/game"
+
+require "zones/zone1"
+require "zones/zone2"
 
 sprites = {}
 
@@ -81,6 +85,14 @@ end
 
 function love.keypressed(key)
 
+end
+
+function loadZones()
+  local zones = {}
+  zones[1] = zone1
+  zones[2] = zone2
+  
+  return zones
 end
 
 function loadImages()
