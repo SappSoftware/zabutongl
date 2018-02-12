@@ -58,6 +58,10 @@ ClientObject = Class{
     self.sender:on("updatePlayers", function(data)
       self.activeZone.players_data = data
     end)
+    
+    self.sender:on("removePlayer", function(data)
+      self.activeZone:removePlayer(data)
+    end)
   end;
   
   update_menu = function(self, dt)
@@ -70,14 +74,14 @@ ClientObject = Class{
     end
   end;
   
-  update_game = function(self, dt)
+  update_game = function(self, dt, mousePos)
     self.tick = self.tick + dt
     
     if self.tick >= self.tickRate then
       self.sender:update(self.tick)
       
       if self.activeZone ~= {} then
-        self.player:update(self.tick)
+        self.player:update(self.tick, mousePos)
         
         self.activeZone:update(self.tick, self.user_data.username)
         
@@ -90,6 +94,10 @@ ClientObject = Class{
   
   draw = function(self)
     love.graphics.print(self.sender:getState(), 5, 5)
+  end;
+  
+  draw_game = function(self)
+    self.activeZone:draw(self.player.player_id)
   end;
   
   joinZone = function(self)

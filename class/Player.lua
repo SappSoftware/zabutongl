@@ -8,6 +8,8 @@ Player = Class{
     self.speed = 300
     self.velocity = Vector(0,0)
     self.dir = dir or 0
+    self.dirLine = {self.pos.x, self.pos.y, self.pos.x + math.cos(self.dir)*self.radius, self.pos.y + math.sin(self.dir)*self.radius}
+    self.label = Label(self.player_id, self.pos.x, self.pos.y, "center", CLR.BLACK)
     self.mask = HC.circle(self.pos.x, self.pos.y, self.radius)
     self.parentZone = parentZone or false
   end;
@@ -17,9 +19,11 @@ Player = Class{
     self.mask:draw("fill")
     love.graphics.setColor(CLR.RED)
     self.mask:draw("line")
+    love.graphics.line(self.dirLine)
+    self.label:draw()
   end;
   
-  update = function(self, dt)
+  update = function(self, dt, mousePos)
     self.dx = 0
     self.dy = 0
     if love.keyboard.isDown("w") then
@@ -71,7 +75,7 @@ Player = Class{
           testCases[index] = collision
         end
         
-        for i = 1, 3 do
+        for i = 1, 2 do
           for i, collision in ipairs(testCases) do
             local test, dx, dy = self.mask:collidesWith(collision.object.mask)
             if test == true then
@@ -227,12 +231,18 @@ Player = Class{
       self.pos = nextpos
       self.mask:moveTo(self.pos:unpack())
     end
+    local mousex, mousey = mousePos:center()
+    self.dir = math.atan2(mousey - self.pos.y, mousex - self.pos.x)
+    self.dirLine = {self.pos.x, self.pos.y, self.pos.x + math.cos(self.dir)*self.radius, self.pos.y + math.sin(self.dir)*self.radius}
+    self.label:setposition(self.pos.x, self.pos.y)
   end;
   
   updateExt = function(self, x, y, dir)
     self.pos.x = x
     self.pos.y = y
     self.dir = dir
+    self.dirLine = {self.pos.x, self.pos.y, self.pos.x + math.cos(self.dir)*self.radius, self.pos.y + math.sin(self.dir)*self.radius}
+    self.label:setposition(self.pos.x, self.pos.y)
     self.mask:moveTo(self.pos:unpack())
   end;
   

@@ -5,13 +5,15 @@ local fields = {}
 local labels = {}
 
 local isWatching = false
+local watchPos = {}
+local cameraSpeed = 300
 
 local camera = {}
 
 function server_menu:init()
   server = nil
+  watchPos = Vector(0,0)
   camera = Camera(0, 0)
-  mousePos = HC.point(love.mouse.getX(), love.mouse.getY())
   buttons.startServer = Button(1/2, 1/6, 1/8, 1/14, "Start Server")
   buttons.startServer.action = toggleServer
   fields.ip = FillableField(1/2, 1/10, 1/8, 1/30, ipAddress, false)
@@ -19,6 +21,28 @@ end
 
 function server_menu:update(dt)
   self:handleMouse(dt)
+  
+  local dx = 0
+  local dy = 0
+  if love.keyboard.isDown("w") then
+    dy = dy - 1
+  end
+  if love.keyboard.isDown("s") then
+    dy = dy + 1
+  end
+  if love.keyboard.isDown("a") then
+    dx = dx - 1
+  end
+  if love.keyboard.isDown("d") then
+    dx = dx + 1
+  end
+  
+  local delta = Vector(dx,dy)
+  delta:normalizeInplace()
+  delta = delta*cameraSpeed*dt
+  watchPos = watchPos + delta
+  
+  camera:lookAt(watchPos:unpack())
   
   for i, button in pairs(buttons) do
     button:update(dt)
@@ -85,7 +109,7 @@ function server_menu:keypressed(key)
 end
 
 function server_menu:mousepressed(mousex,mousey,mouseButton,isTouch)
-  mousePos = HC.point(mousex, mousey)
+  mousePos:moveTo(mousex, mousey)
   
   if mouseButton == 1 then
     for pos, field in pairs(fields) do

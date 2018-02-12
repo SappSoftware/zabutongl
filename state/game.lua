@@ -9,8 +9,12 @@ local ui_square = {}
 local camera = {}
 local zoom = 1
 
+local worldMouse = {}
+
 function game:init()
   camera = Camera(0, 0)
+  
+  worldMouse = HC.point(camera:worldCoords(mousePos:center()))
   
   ui_square = HC.rectangle(0, SW, SW, SH-SW)
   labels.coord = Label("(" .. client.player.pos.x .. ", " .. client.player.pos.y .. ")", .1, .1, "left", CLR.BLACK)
@@ -18,15 +22,17 @@ end
 
 function game:enter(from)
   love.graphics.setBackgroundColor(CLR.WHITE)
-  mousePos = HC.point(love.mouse.getX(), love.mouse.getY())
 
   camera:lookAt(0, 0)
+  
+  worldMouse:moveTo(camera:worldCoords(mousePos:center()))
 end
 
 function game:update(dt)
   self:handleMouse()
+  worldMouse:moveTo(camera:worldCoords(mousePos:center()))
   
-  client:update_game(dt)
+  client:update_game(dt, worldMouse)
   
   camera:lookAt(client.player.pos:unpack())
   
@@ -78,14 +84,14 @@ end
 
 function game:draw()
   camera:draw(self.draw_game)
-
+  
   self:drawUI()
   
   self:drawDebug()
 end
 
 function game:draw_game()
-  client.activeZone:draw()
+  client:draw_game()
 end
 
 function game:drawUI()

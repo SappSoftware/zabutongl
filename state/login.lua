@@ -5,28 +5,21 @@ local user_data = {}
 local fields = {}
 local buttons = {}
 local labels = {}
-local testmouseslow = {}
-local testmousefast = {}
-local test = {}
 
 function login:init()
-  mousePos = HC.point(love.mouse.getX(), love.mouse.getY())
   buttons.login = Button(.5, 5/8, 1/8, 1/12, "Connect to Server")
   buttons.swapMode = Button(0.53, .71, 1/15, 1/30, "Register")
   
   buttons.login.isSelectable = false
   
   fields.username = FillableField(1/2, .45, 1/8, 1/20, "Enter Username", false, true)
-  fields.password = FillableField(.5, .525, 1/8, 1/20, "Enter Password", false, true, true)
+  fields.password = FillableField(.5, .525, 1/8, 1/20, "Enter Password", false, true, 100, true)
   
   fields.ip = FillableField(.5, .1, 1/8, 1/20, ipAddress, false)
 end
 
 function login:enter(from)
-  mousePos = HC.point(love.mouse.getX(), love.mouse.getY())
-  test = mousePos:center()
-  testmouseslow = HC.circle(0,0, 30)
-  testmousefast = HC.circle(0,0, 30)
+  
 end
 
 function login:update(dt)
@@ -34,22 +27,13 @@ function login:update(dt)
   TICK = TICK + dt
   self:handleMouse(dt)
   
-  if client ~= nil then
-    client:update_menu(dt)
-  end
-  
-  for i, button in pairs(buttons) do
-    button:update(dt)
-  end
-  
-  for i, field in pairs(fields) do
-    field:update(dt)
-  end
-  
   if TICK >= FPS then
-    testmouseslow:moveTo(x,y)
     if client ~= nil then
-      client:update(dt)
+      client:update_menu(dt)
+    end
+    
+    for i, button in pairs(buttons) do
+      button:update(dt)
     end
     
     for _, field in pairs(fields) do
@@ -68,11 +52,6 @@ end
 
 function login:draw()
   drawFPS(fpsCounter)
-  love.graphics.print(tostring(test), 50, 100)
-  love.graphics.setColor(CLR.BLUE)
-  testmouseslow:draw('fill')
-  love.graphics.setColor(CLR.RED)
-  testmousefast:draw('fill')
   if client ~= nil then
     client:draw()
   end

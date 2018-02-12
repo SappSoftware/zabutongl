@@ -31,7 +31,9 @@ ServerObject = Class{
     self.sender:on("disconnect", function(data, client)
       local index = client:getIndex()
       self.activeZone:removePlayer(self.playerList[index])
+      self.sender:sendToAll("removePlayer", self.playerList[index])
       self.playerList[index] = nil
+      
     end)
     
     self.sender:on("register", function(data, client)

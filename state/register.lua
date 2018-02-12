@@ -9,7 +9,6 @@ local labels = {}
 local passwordsMatch = false
 
 function register:init()
-  mousePos = HC.point(love.mouse.getX(), love.mouse.getY())
   buttons.register = Button(1/2, 5*1/8, 1/8, 1/12, "Submit Registration")
   buttons.swapMode = Button(1/2+1/34, 71/100, 1/15, 1/30, "Login")
   

@@ -25,15 +25,22 @@ Zone = Class{
     return masks
   end;
   
-  draw = function(self)
+  draw = function(self, player_id)
     love.graphics.setColor(CLR.RED)
     
     for i, mask in ipairs(self.masks) do
       mask:draw("line")
     end
     for i, player in pairs(self.players) do
-      player:draw()
+      if i ~= player_id then
+        player:draw()
+      end
     end
+    
+    if player_id ~= nil then
+      self.players[player_id]:draw()
+    end
+    
     for i, npc in pairs(self.npcs) do
       npc:draw()
     end

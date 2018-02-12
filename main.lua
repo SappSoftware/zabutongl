@@ -1,4 +1,4 @@
-debug = true
+debug = false
 
 isServer = false
 
@@ -43,6 +43,8 @@ SH = love.graphics.getHeight()
 
 CUR = {}
 
+ZONES = {}
+
 FNT = {}
 
 mousePos = {}
@@ -50,13 +52,15 @@ mousePos = {}
 TICK = 0
 FPS = 1/60
 
-ipAddress = "10.246.205.96"
+ipAddress = "10.246.2.249"
 
 function love.load(arg)
   if debug then require("mobdebug").start() end
   Gamestate.registerEvents()
   love.keyboard.setKeyRepeat(true)
   FNT.DEFAULT = love.graphics.newFont(math.floor(SH/64))
+  ZONES = loadZones()
+  mousePos = HC.point(0,0)
   love.graphics.setFont(FNT.DEFAULT)
   love.graphics.setBackgroundColor(CLR.BLACK)
   CUR.H = love.mouse.getSystemCursor("hand")
