@@ -1,9 +1,24 @@
 roundTo = function(num, numDecimalPlaces)
   local mult = 10^(numDecimalPlaces or 0)
-  if num >= 0 then 
-    return math.floor(num * mult + 0.5) / mult
-  else 
-    return math.ceil(num * mult - 0.5) / mult 
+  if Vector.isvector(num) == true then
+    local tempx, tempy = 0,0
+    if num.x >= 0 then
+      tempx = math.floor(num.x * mult + 0.5) / mult
+    else
+      tempx = math.ceil(num.x * mult - 0.5) / mult
+    end
+    if num.y >= 0 then
+      tempy = math.floor(num.y * mult + 0.5) / mult
+    else
+      tempy = math.ceil(num.y * mult - 0.5) / mult
+    end
+    return Vector(tempx, tempy)
+  else
+    if num >= 0 then 
+      return math.floor(num * mult + 0.5) / mult
+    else 
+      return math.ceil(num * mult - 0.5) / mult 
+    end
   end
 end
 

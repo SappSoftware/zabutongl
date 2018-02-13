@@ -4,8 +4,10 @@ Player = Class{
     self.pos = Vector(x or 0, y or 0)
     self.dx = 0
     self.dy = 0
-    self.radius = 50
-    self.speed = 300
+    self.radius = 40
+    self.speed = 400
+    self.accelC = 50
+    self.acceleration = Vector(0,0)
     self.velocity = Vector(0,0)
     self.dir = dir or 0
     self.dirLine = {self.pos.x, self.pos.y, self.pos.x + math.cos(self.dir)*self.radius, self.pos.y + math.sin(self.dir)*self.radius}
@@ -38,11 +40,20 @@ Player = Class{
     if love.keyboard.isDown("d") then
       self.dx = self.dx + 1
     end
-    self.velocity.x = self.dx*self.speed
-    self.velocity.y = self.dy*self.speed
+    if self.dx == 0 and self.dy == 0 then
+      self.acceleration = -self.velocity*self.accelC*dt*.3
+    else
+      self.acceleration.x = self.dx
+      self.acceleration.y = self.dy
+      self.acceleration:normalizeInplace()
+      self.acceleration = self.acceleration*self.accelC*dt
+    end
+    
+    self.velocity = roundTo(self.velocity + self.acceleration, 2)
+    
     self.velocity:trimInplace(self.speed*dt)
     local nextpos = Vector(0,0)
-    if self.velocity:len2() ~= 0 then
+    --if self.velocity:len2() ~= 0 then
       nextpos = self.pos + self.velocity
       
       self.mask:moveTo(nextpos:unpack())
@@ -228,9 +239,9 @@ Player = Class{
         ]]--
       end
       
-      self.pos = nextpos
+      self.pos = roundTo(nextpos,1)
       self.mask:moveTo(self.pos:unpack())
-    end
+    --end
     local mousex, mousey = mousePos:center()
     self.dir = math.atan2(mousey - self.pos.y, mousex - self.pos.x)
     self.dirLine = {self.pos.x, self.pos.y, self.pos.x + math.cos(self.dir)*self.radius, self.pos.y + math.sin(self.dir)*self.radius}
